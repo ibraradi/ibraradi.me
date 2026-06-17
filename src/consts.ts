@@ -2,7 +2,7 @@
 
 // Feature flag: set to `true` to bring the blog back (nav link, home CTA,
 // /blog pages, RSS feed, and sitemap entries all switch on together).
-export const BLOG_ENABLED = false;
+export const BLOG_ENABLED = true;
 
 export const SITE = {
   name: 'Ibrahim Radi',

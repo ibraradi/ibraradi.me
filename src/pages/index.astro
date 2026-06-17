@@ -1,10 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { SITE, SOCIALS, EXPERIENCE, SKILLS, AWARDS, EDUCATION, CERTIFICATES, VOLUNTEERING } from '../consts';
+import { SITE, SOCIALS, BLOG_ENABLED, EXPERIENCE, SKILLS, AWARDS, EDUCATION, CERTIFICATES, VOLUNTEERING } from '../consts';
+import { getPosts } from '../lib/storyblok';
 
 // Severity ranking for findings (most impactful first).
 const SEV = ['crit', 'high', 'info', 'info'];
 const findings = EXPERIENCE.map((xp, i) => ({ ...xp, sev: SEV[i] ?? 'info', n: i + 1 }));
+
+// Recent field notes (blog) — newest few, shown only if the blog has posts.
+const recentPosts = BLOG_ENABLED ? (await getPosts()).slice(0, 4) : [];
+const noteDate = (d: string) =>
+  d ? new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
 
 const ghShort = SOCIALS.github.replace('https://', '');
 const liShort = SOCIALS.linkedin.replace('https://www.', '').replace(/\/$/, '');
@@ -133,10 +139,34 @@ const liShort = SOCIALS.linkedin.replace('https://www.', '').replace(/\/$/, '');
       </div>
     </section>
 
+    <!-- FIELD NOTES -->
+    {BLOG_ENABLED && (
+      <section class="dsec" data-reveal>
+        <div class="dsec-head">
+          <span class="dsec-no">§06</span><span class="dsec-title">Field Notes</span>
+          <span class="dsec-meta">{recentPosts.length} recent</span>
+        </div>
+        {recentPosts.length === 0 ? (
+          <div class="empty-state">No transmissions yet. <a class="notes-all" href="/blog">open field notes →</a></div>
+        ) : (
+          <div class="notes-mini">
+            {recentPosts.map((p) => (
+              <a class="note-mini" href={`/blog/${p.slug}/`}>
+                <time datetime={p.date}>{noteDate(p.date)}</time>
+                <span class="nm-title">{p.title}</span>
+                <span class="nm-go">→</span>
+              </a>
+            ))}
+          </div>
+        )}
+        <a class="notes-all" href="/blog">view all field notes →</a>
+      </section>
+    )}
+
     <!-- COMMS -->
     <section class="dsec" data-reveal>
       <div class="dsec-head">
-        <span class="dsec-no">§06</span><span class="dsec-title">Establish Comms</span>
+        <span class="dsec-no">§07</span><span class="dsec-title">Establish Comms</span>
         <span class="dsec-meta">channels open</span>
       </div>
       <div class="dcomms">

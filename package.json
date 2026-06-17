@@ -8,11 +8,14 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "seed:blog": "node --env-file=.env scripts/seed-storyblok.mjs",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.11",
     "@astrojs/sitemap": "^3.4.1",
-    "astro": "^5.13.0"
+    "@storyblok/astro": "^9.0.12",
+    "astro": "^5.13.0",
+    "marked": "^18.0.5"
   }
 }

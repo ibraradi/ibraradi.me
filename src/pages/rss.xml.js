@@ -1,26 +1,23 @@
 import rss from '@astrojs/rss';
-import { getCollection } from 'astro:content';
 import { SITE, BLOG_ENABLED } from '../consts';
+import { getPosts } from '../lib/storyblok';
 
 export async function GET(context) {
-  // Blog is feature-flagged off — no feed.
   if (!BLOG_ENABLED) {
     return new Response('Not found', { status: 404 });
   }
 
-  const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
-    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-  );
+  const posts = await getPosts();
 
   return rss({
-    title: `${SITE.name} — Blog`,
+    title: `${SITE.name} — Field Notes`,
     description: SITE.description,
     site: context.site ?? SITE.url,
     items: posts.map((post) => ({
-      title: post.data.title,
-      description: post.data.description,
-      pubDate: post.data.pubDate,
-      link: `/blog/${post.id}/`,
+      title: post.title,
+      description: post.excerpt,
+      pubDate: post.date ? new Date(post.date) : new Date(),
+      link: `/blog/${post.slug}/`,
     })),
   });
 }

@@ -1,47 +1,56 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { BLOG_ENABLED } from '../../consts';
+import { getPosts } from '../../lib/storyblok';
 
-// Blog is feature-flagged off — send visitors to the homepage.
 if (!BLOG_ENABLED) {
   return Astro.redirect('/');
 }
 
-const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
-
-const dateFmt = (d: Date) =>
-  d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+const posts = await getPosts();
+const dateFmt = (d: string) =>
+  d ? new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
 ---
 
 <BaseLayout
-  title="Blog"
-  description="Writing on attack surface management, threat intelligence, bug bounty, and CTF by Ibrahim Radi."
+  title="Field Notes"
+  description="Field write-ups on offensive security, tooling, and research by Ibrahim Radi."
   path="/blog"
 >
-  <section class="container page-head" aria-label="Blog intro">
-    <span class="eyebrow">writing</span>
-    <h1>Blog</h1>
-    <p>Notes on attack surface management, threat intelligence, offensive security, and the occasional CTF write-up.</p>
-  </section>
+  <div class="doc">
+    <section class="doc-hero" data-reveal>
+      <div>
+        <p class="dh-kicker">Dossier · <b>Field Notes</b></p>
+        <h1 class="dh-name" style="font-size: clamp(2.2rem, 6vw, 3.4rem)">Field Notes</h1>
+        <p class="dh-assess">
+          Write-ups from the field — offensive security, tooling I had to build, and research worth keeping.
+        </p>
+      </div>
+    </section>
 
-  <div class="container">
-    {posts.length === 0 ? (
-      <div class="post-list">
-        <div class="empty-state">No posts yet — check back soon.</div>
+    <section class="dsec" data-reveal>
+      <div class="dsec-head">
+        <span class="dsec-no">§</span><span class="dsec-title">Transmissions</span>
+        <span class="dsec-meta">{posts.length} logged</span>
       </div>
-    ) : (
-      <div class="post-list">
-        {posts.map((post) => (
-          <a class="post-row" href={`/blog/${post.id}/`}>
-            <time datetime={post.data.pubDate.toISOString()}>{dateFmt(post.data.pubDate)}</time>
-            <h2>{post.data.title}</h2>
-            <p>{post.data.description}</p>
-          </a>
-        ))}
-      </div>
-    )}
+
+      {posts.length === 0 ? (
+        <div class="empty-state">No transmissions published yet — check back soon.</div>
+      ) : (
+        <div class="notes">
+          {posts.map((p) => (
+            <a class="note" href={`/blog/${p.slug}/`}>
+              <div class="note-top">
+                <time datetime={p.date}>{dateFmt(p.date)}</time>
+                {p.tags.length > 0 && <span class="note-tags">{p.tags.join(' · ')}</span>}
+              </div>
+              <h2 class="note-title">{p.title}</h2>
+              {p.excerpt && <p class="note-ex">{p.excerpt}</p>}
+              <span class="note-go">read →</span>
+            </a>
+          ))}
+        </div>
+      )}
+    </section>
   </div>
 </BaseLayout>

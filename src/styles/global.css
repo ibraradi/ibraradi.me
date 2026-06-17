@@ -1342,3 +1342,47 @@ section {
   .creds, .dcomms { grid-template-columns: 1fr; }
   .finding-period { margin-left: 0; width: 100%; }
 }
+
+/* ---------- Blog (field notes) ---------- */
+.notes { display: flex; flex-direction: column; gap: 12px; }
+.note {
+  display: block; position: relative;
+  border: 1px solid var(--border); border-left: 3px solid var(--border-strong);
+  border-radius: 0 12px 12px 0;
+  background: linear-gradient(180deg, rgba(18, 26, 38, 0.6), rgba(11, 17, 26, 0.6));
+  padding: 18px 20px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.note:hover { border-left-color: var(--accent); transform: translateX(3px); }
+.note-top { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; font-family: var(--mono); font-size: 0.74rem; color: var(--muted-dim); }
+.note-tags { color: var(--accent); }
+.note-title { font-size: 1.18rem; color: var(--text-strong); margin: 8px 0 6px; letter-spacing: -0.01em; }
+.note-ex { color: var(--muted); font-size: 0.94rem; max-width: 70ch; }
+.note-go { display: inline-block; margin-top: 12px; font-family: var(--mono); font-size: 0.78rem; color: var(--accent); }
+
+.empty-state {
+  border: 1px dashed var(--border-strong); border-radius: 12px;
+  background: var(--paper); padding: 40px; text-align: center; color: var(--muted);
+  font-family: var(--mono); font-size: 0.9rem;
+}
+
+/* Article (post) page */
+.post-article { max-width: 760px; margin-inline: auto; padding-top: 40px; }
+.post-article .back { font-family: var(--mono); font-size: 0.82rem; color: var(--muted); }
+.post-article .back:hover { color: var(--accent); }
+
+/* Homepage "recent transmissions" links */
+.notes-mini { display: flex; flex-direction: column; gap: 10px; }
+.note-mini {
+  display: grid; grid-template-columns: 118px 1fr auto; gap: 4px 14px; align-items: baseline;
+  border-bottom: 1px dashed var(--border); padding: 11px 0;
+}
+.note-mini:last-child { border-bottom: 0; }
+.note-mini time { font-family: var(--mono); font-size: 0.74rem; color: var(--muted-dim); }
+.note-mini .nm-title { color: var(--text-strong); font-size: 0.96rem; }
+.note-mini:hover .nm-title { color: var(--accent); }
+.note-mini .nm-go { font-family: var(--mono); font-size: 0.74rem; color: var(--accent); }
+.notes-all { display: inline-block; margin-top: 14px; font-family: var(--mono); font-size: 0.8rem; color: var(--accent); }
+@media (max-width: 560px) {
+  .note-mini { grid-template-columns: 1fr; }
+}
