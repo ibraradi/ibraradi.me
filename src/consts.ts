@@ -19,6 +19,8 @@ export const SOCIALS = {
   email: 'me@ibraradi.me',
   github: 'https://github.com/ibraradi',
   linkedin: 'https://www.linkedin.com/in/ibraradi/',
+  x: 'https://x.com/ibraradi9',
+  xHandle: '@ibraradi9',
 } as const;
 
 export const NAV = [

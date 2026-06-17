@@ -1320,7 +1320,7 @@ section {
 .cred li::before { content: '·'; position: absolute; left: 2px; color: var(--accent); }
 
 /* comms */
-.dcomms { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.dcomms { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
 .dcomms a {
   display: flex; flex-direction: column; gap: 4px; font-family: var(--mono);
   border: 1px solid var(--border); border-radius: 10px; background: var(--surface); padding: 16px;
