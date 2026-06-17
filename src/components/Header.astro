@@ -1,0 +1,37 @@
+---
+import { NAV, SITE, BLOG_ENABLED } from '../consts';
+
+const navItems = NAV.filter((item) => BLOG_ENABLED || item.href !== '/blog');
+---
+
+<header class="site-header">
+  <nav class="container nav" aria-label="Primary">
+    <a class="brand" href="/">{SITE.name.split(' ')[0]}<span>.radi</span></a>
+
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
+      ☰
+    </button>
+
+    <ul class="nav-links" id="nav-links">
+      {navItems.map((item) => (
+        <li><a href={item.href}>{item.label}</a></li>
+      ))}
+    </ul>
+  </nav>
+</header>
+
+<script>
+  const toggle = document.getElementById('nav-toggle');
+  const links = document.getElementById('nav-links');
+  toggle?.addEventListener('click', () => {
+    const open = links?.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(!!open));
+  });
+  // Close the mobile menu after navigating to an in-page anchor.
+  links?.querySelectorAll('a').forEach((a) =>
+    a.addEventListener('click', () => {
+      links.classList.remove('open');
+      toggle?.setAttribute('aria-expanded', 'false');
+    }),
+  );
+</script>

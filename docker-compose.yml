@@ -1,0 +1,18 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: ibraradi-dev
+    ports:
+      - "4321:4321"
+    environment:
+      # Enables Vite file-watch polling so edits on the host trigger HMR.
+      - DOCKER_DEV=true
+    volumes:
+      # Mount the project so source edits on the host are live in the container.
+      - .:/app
+      # Keep container-built node_modules (Linux binaries) — do NOT use the
+      # host's Windows-built modules. This anonymous volume shadows ./node_modules.
+      - /app/node_modules
+    restart: unless-stopped

@@ -1,0 +1,169 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import {
+  SITE,
+  SOCIALS,
+  BLOG_ENABLED,
+  EXPERIENCE,
+  SKILLS,
+  AWARDS,
+  CERTIFICATES,
+  EDUCATION,
+  VOLUNTEERING,
+} from '../consts';
+---
+
+<BaseLayout>
+  <!-- Hero -->
+  <section class="hero container" aria-label="Intro">
+    <span class="hero-card"><span class="status-dot" aria-hidden="true"></span> Open to security work & collaborations</span>
+    <h1>Ibrahim Radi —<br /><span class="grad">Security Engineer</span> & builder.</h1>
+    <p class="hero-sub">
+      Technical co-founder of <strong style="color:var(--text-strong)">Flawtrack</strong>. I build attack surface
+      management, threat-intel, and brand-protection systems — and break things as a pentester, bug bounty hunter,
+      and CTF player.
+    </p>
+    <div class="hero-meta">
+      <span>📍 {SITE.location}</span>
+      <span>🛡️ ASM · Threat Intel · DevSecOps</span>
+      <span>🏁 CTF · Bug Bounty</span>
+    </div>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href={`mailto:${SOCIALS.email}`}>Get in touch</a>
+      <a class="btn" href={SOCIALS.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      {BLOG_ENABLED && <a class="btn" href="/blog">Read the blog →</a>}
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="container" aria-label="About">
+    <span class="eyebrow">whoami</span>
+    <h2 class="section-title">About</h2>
+    <div class="prose">
+      <p>
+        I'm a security engineer who likes living on both sides of the line — building the defensive platforms and
+        running the offensive tests. At <strong>Flawtrack</strong> I built the entire stack from initial code to
+        production: the core ASM, brand-protection, and threat-intel engines, the DevSecOps pipelines, the AI/RAG
+        integrations, and the dashboards that turn raw security logs into clear, visual data.
+      </p>
+      <p>
+        Before that, as a security engineer at <strong>DeepStrike</strong>, I ran penetration tests and audits,
+        managed AWS and Cloudflare security, and baked security into the SDLC. On the side I hunt bugs, compete in
+        CTFs across web, OSINT, and mobile, and teach the next wave of students through <strong>CAT Reloaded</strong>.
+      </p>
+    </div>
+  </section>
+
+  <!-- Experience -->
+  <section id="experience" class="container" aria-label="Experience">
+    <span class="eyebrow">career</span>
+    <h2 class="section-title">Experience</h2>
+    <div class="timeline">
+      {EXPERIENCE.map((xp) => (
+        <article class="xp">
+          <div class="xp-head">
+            <div>
+              <div class="xp-role">{xp.role} · <span class="xp-company">{xp.company}</span></div>
+              <div class="xp-loc">{xp.location}</div>
+            </div>
+            <div class="xp-period">{xp.period}</div>
+          </div>
+          {xp.summary && <p class="xp-summary">{xp.summary}</p>}
+          <ul>
+            {xp.points.map((p) => <li>{p}</li>)}
+          </ul>
+          {xp.tags && (
+            <div class="tags">
+              {xp.tags.map((t) => <span class="tag">{t}</span>)}
+            </div>
+          )}
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills" class="container" aria-label="Skills">
+    <span class="eyebrow">toolkit</span>
+    <h2 class="section-title">Skills</h2>
+    <div class="skills-grid">
+      {SKILLS.map((group) => (
+        <div class="skill-card">
+          <h3>{group.title}</h3>
+          <div class="chips">
+            {group.items.map((item) => <span class="chip">{item}</span>)}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Awards & Education -->
+  <section id="awards" class="container" aria-label="Awards and Education">
+    <span class="eyebrow">highlights</span>
+    <h2 class="section-title">Awards & Recognition</h2>
+    <div class="cols-2">
+      <div class="list-card">
+        <h3>🏆 CTF & Competitions</h3>
+        <ul class="check-list">
+          {AWARDS.map((a) => <li>{a}</li>)}
+        </ul>
+      </div>
+      <div class="list-card">
+        <h3>🎓 Education & Certs</h3>
+        <ul class="check-list">
+          {EDUCATION.map((e) => (
+            <li>
+              <div class="meta-row">
+                <strong style="color:var(--text-strong)">{e.school}</strong>
+                <span class="badge">{e.period}</span>
+              </div>
+              <div class="sub">{e.program} · {e.note}</div>
+            </li>
+          ))}
+          {CERTIFICATES.map((c) => (
+            <li>
+              <strong style="color:var(--text-strong)">{c.name}</strong>
+              <div class="sub">{c.issuer}</div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Volunteering -->
+  <section id="volunteering" class="container" aria-label="Volunteering">
+    <span class="eyebrow">giving back</span>
+    <h2 class="section-title">Volunteering</h2>
+    <div class="timeline">
+      {VOLUNTEERING.map((v) => (
+        <article class="xp">
+          <div class="xp-head">
+            <div class="xp-role">{v.role}</div>
+            <div class="xp-period">{v.org}</div>
+          </div>
+          <ul>
+            {v.points.map((p) => <li>{p}</li>)}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="container" aria-label="Contact">
+    <div class="contact-card">
+      <h2>Let's build something secure.</h2>
+      <p>
+        Whether it's a security engagement, a platform to harden, or just talking shop about ASM and CTFs — my inbox
+        is open.
+      </p>
+      <div class="contact-actions">
+        <a class="btn btn-primary" href={`mailto:${SOCIALS.email}`}>{SOCIALS.email}</a>
+        <a class="btn" href={SOCIALS.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+        <a class="btn" href={SOCIALS.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,47 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { BLOG_ENABLED } from '../../consts';
+
+// Blog is feature-flagged off — send visitors to the homepage.
+if (!BLOG_ENABLED) {
+  return Astro.redirect('/');
+}
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const dateFmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+---
+
+<BaseLayout
+  title="Blog"
+  description="Writing on attack surface management, threat intelligence, bug bounty, and CTF by Ibrahim Radi."
+  path="/blog"
+>
+  <section class="container page-head" aria-label="Blog intro">
+    <span class="eyebrow">writing</span>
+    <h1>Blog</h1>
+    <p>Notes on attack surface management, threat intelligence, offensive security, and the occasional CTF write-up.</p>
+  </section>
+
+  <div class="container">
+    {posts.length === 0 ? (
+      <div class="post-list">
+        <div class="empty-state">No posts yet — check back soon.</div>
+      </div>
+    ) : (
+      <div class="post-list">
+        {posts.map((post) => (
+          <a class="post-row" href={`/blog/${post.id}/`}>
+            <time datetime={post.data.pubDate.toISOString()}>{dateFmt(post.data.pubDate)}</time>
+            <h2>{post.data.title}</h2>
+            <p>{post.data.description}</p>
+          </a>
+        ))}
+      </div>
+    )}
+  </div>
+</BaseLayout>
