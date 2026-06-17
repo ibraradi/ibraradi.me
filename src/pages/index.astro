@@ -6,21 +6,6 @@ import { SITE, SOCIALS, EXPERIENCE, SKILLS, AWARDS, EDUCATION, CERTIFICATES, VOL
 const SEV = ['crit', 'high', 'info', 'info'];
 const findings = EXPERIENCE.map((xp, i) => ({ ...xp, sev: SEV[i] ?? 'info', n: i + 1 }));
 
-// Linked-entities graph nodes, positioned evenly around a central SUBJECT node.
-const ENTITIES = [
-  { label: 'Flawtrack', rel: 'co-founder', href: '#finding-1' },
-  { label: 'DeepStrike', rel: 'security eng', href: '#finding-2' },
-  { label: 'GitHub', rel: 'code', href: SOCIALS.github, ext: true },
-  { label: 'LinkedIn', rel: 'profile', href: SOCIALS.linkedin, ext: true },
-  { label: 'CAT Reloaded', rel: 'instructor', href: '#credentials' },
-  { label: 'Mansoura U.', rel: 'education', href: '#credentials' },
-];
-const CX = 310, CY = 175, R = 130;
-const nodes = ENTITIES.map((e, i) => {
-  const a = (-90 + i * (360 / ENTITIES.length)) * (Math.PI / 180);
-  return { ...e, x: Math.round(CX + R * Math.cos(a)), y: Math.round(CY + R * Math.sin(a)) };
-});
-
 const ghShort = SOCIALS.github.replace('https://', '');
 const liShort = SOCIALS.linkedin.replace('https://www.', '').replace(/\/$/, '');
 ---
@@ -56,42 +41,16 @@ const liShort = SOCIALS.linkedin.replace('https://www.', '').replace(/\/$/, '');
         <div class="field"><div class="field-k">Full name</div><div class="field-v">Ibrahim Radi</div></div>
         <div class="field"><div class="field-k">Handle</div><div class="field-v mono">@ibraradi</div></div>
         <div class="field"><div class="field-k">Last known location</div><div class="field-v">{SITE.location}</div></div>
-        <div class="field"><div class="field-k">Timezone</div><div class="field-v mono">GMT+8</div></div>
         <div class="field"><div class="field-k">Current role</div><div class="field-v">Co-Founder @ Flawtrack</div></div>
-        <div class="field"><div class="field-k">Status</div><div class="field-v">Active · open to work</div></div>
         <div class="field"><div class="field-k">Direct line</div><div class="field-v mono"><span class="redacted" tabindex="0">+•• ••• ••• ••••</span></div></div>
         <div class="field"><div class="field-k">Clearance</div><div class="field-v mono"><span class="redacted" tabindex="0">AWS-CCP-VERIFIED</span></div></div>
-      </div>
-    </section>
-
-    <!-- LINKED ENTITIES -->
-    <section class="dsec" data-reveal>
-      <div class="dsec-head">
-        <span class="dsec-no">§02</span><span class="dsec-title">Linked Entities</span>
-        <span class="dsec-meta">{nodes.length} associations</span>
-      </div>
-      <div class="lent">
-        <svg viewBox="0 0 620 380" role="img" aria-label="Network graph of linked entities">
-          {nodes.map((n) => <line class="lent-edge" x1={CX} y1={CY} x2={n.x} y2={n.y} />)}
-          {nodes.map((n) => (
-            <a href={n.href} class="lent-node" target={n.ext ? '_blank' : undefined} rel={n.ext ? 'noopener noreferrer' : undefined}>
-              <circle cx={n.x} cy={n.y} r="22" />
-              <text x={n.x} y={n.y + 40} text-anchor="middle">{n.label}</text>
-              <text x={n.x} y={n.y + 54} text-anchor="middle" class="rel">{n.rel}</text>
-            </a>
-          ))}
-          <g class="lent-node lent-center">
-            <circle cx={CX} cy={CY} r="34" />
-            <text x={CX} y={CY + 5} text-anchor="middle">IR</text>
-          </g>
-        </svg>
       </div>
     </section>
 
     <!-- FINDINGS -->
     <section class="dsec" data-reveal>
       <div class="dsec-head">
-        <span class="dsec-no">§03</span><span class="dsec-title">Intelligence Findings</span>
+        <span class="dsec-no">§02</span><span class="dsec-title">Intelligence Findings</span>
         <span class="dsec-meta">{findings.length} logged</span>
       </div>
       <div class="findings">
@@ -115,7 +74,7 @@ const liShort = SOCIALS.linkedin.replace('https://www.', '').replace(/\/$/, '');
     <!-- CAPABILITY MATRIX -->
     <section class="dsec" data-reveal>
       <div class="dsec-head">
-        <span class="dsec-no">§04</span><span class="dsec-title">Capability Matrix</span>
+        <span class="dsec-no">§03</span><span class="dsec-title">Capability Matrix</span>
         <span class="dsec-meta">{SKILLS.length} domains</span>
       </div>
       <div class="matrix">
@@ -131,7 +90,7 @@ const liShort = SOCIALS.linkedin.replace('https://www.', '').replace(/\/$/, '');
     <!-- FIELD RECORD -->
     <section class="dsec" data-reveal>
       <div class="dsec-head">
-        <span class="dsec-no">§05</span><span class="dsec-title">Field Record</span>
+        <span class="dsec-no">§04</span><span class="dsec-title">Field Record</span>
         <span class="dsec-meta">ctf &amp; competitions</span>
       </div>
       <div class="record">
@@ -144,7 +103,7 @@ const liShort = SOCIALS.linkedin.replace('https://www.', '').replace(/\/$/, '');
     <!-- CREDENTIALS -->
     <section class="dsec" id="credentials" data-reveal>
       <div class="dsec-head">
-        <span class="dsec-no">§06</span><span class="dsec-title">Verified Credentials</span>
+        <span class="dsec-no">§05</span><span class="dsec-title">Verified Credentials</span>
         <span class="dsec-meta">education · certs · service</span>
       </div>
       <div class="creds">
@@ -177,7 +136,7 @@ const liShort = SOCIALS.linkedin.replace('https://www.', '').replace(/\/$/, '');
     <!-- COMMS -->
     <section class="dsec" data-reveal>
       <div class="dsec-head">
-        <span class="dsec-no">§07</span><span class="dsec-title">Establish Comms</span>
+        <span class="dsec-no">§06</span><span class="dsec-title">Establish Comms</span>
         <span class="dsec-meta">channels open</span>
       </div>
       <div class="dcomms">
