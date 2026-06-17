@@ -14,9 +14,31 @@ const noteDate = (d: string) =>
 
 const ghShort = SOCIALS.github.replace('https://', '');
 const liShort = SOCIALS.linkedin.replace('https://www.', '').replace(/\/$/, '');
+
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: SITE.name,
+  url: SITE.url,
+  image: `${SITE.url}/og.png`,
+  jobTitle: 'Security Engineer',
+  description: SITE.description,
+  worksFor: { '@type': 'Organization', name: 'Flawtrack' },
+  alumniOf: { '@type': 'CollegeOrUniversity', name: 'Mansoura University' },
+  address: { '@type': 'PostalAddress', addressLocality: 'Kuala Lumpur', addressCountry: 'MY' },
+  knowsAbout: [
+    'Attack Surface Management',
+    'Threat Intelligence',
+    'Penetration Testing',
+    'Bug Bounty',
+    'DevSecOps',
+    'Cloud Security',
+  ],
+  sameAs: [SOCIALS.github, SOCIALS.linkedin],
+};
 ---
 
-<BaseLayout>
+<BaseLayout jsonLd={personLd}>
   <div class="doc">
     <!-- TITLE BLOCK -->
     <section class="doc-hero" data-reveal>

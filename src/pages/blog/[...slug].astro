@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { BLOG_ENABLED } from '../../consts';
+import { BLOG_ENABLED, SITE } from '../../consts';
 import { getPosts, getPost } from '../../lib/storyblok';
 import { marked } from 'marked';
 
@@ -17,9 +17,30 @@ const html = data ? await marked.parse(data.content || '') : '';
 
 const dateFmt = (d: string) =>
   d ? new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
+const isoDate = data?.date ? new Date(data.date).toISOString() : undefined;
+
+const articleLd = data && {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: data.title,
+  description: data.excerpt,
+  datePublished: isoDate,
+  image: `${SITE.url}/og.png`,
+  keywords: data.tags.join(', '),
+  author: { '@type': 'Person', name: SITE.name, url: SITE.url },
+  publisher: { '@type': 'Person', name: SITE.name, url: SITE.url },
+  mainEntityOfPage: `${SITE.url}/blog/${data.slug}/`,
+};
 ---
 
-<BaseLayout title={data?.title} description={data?.excerpt} path={`/blog/${data?.slug}/`}>
+<BaseLayout
+  title={data?.title}
+  description={data?.excerpt}
+  path={`/blog/${data?.slug}/`}
+  ogType="article"
+  publishedTime={isoDate}
+  jsonLd={articleLd || undefined}
+>
   <div class="doc">
     <article class="article post-article">
       <a class="back" href="/blog">← field notes</a>

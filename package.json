@@ -9,6 +9,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "seed:blog": "node --env-file=.env scripts/seed-storyblok.mjs",
+    "gen:og": "node scripts/gen-og.mjs",
     "astro": "astro"
   },
   "dependencies": {
