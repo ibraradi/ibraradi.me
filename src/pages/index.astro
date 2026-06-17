@@ -1,169 +1,190 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import {
-  SITE,
-  SOCIALS,
-  BLOG_ENABLED,
-  EXPERIENCE,
-  SKILLS,
-  AWARDS,
-  CERTIFICATES,
-  EDUCATION,
-  VOLUNTEERING,
-} from '../consts';
+import { SITE, SOCIALS, EXPERIENCE, SKILLS, AWARDS, EDUCATION, CERTIFICATES, VOLUNTEERING } from '../consts';
+
+// Severity ranking for findings (most impactful first).
+const SEV = ['crit', 'high', 'info', 'info'];
+const findings = EXPERIENCE.map((xp, i) => ({ ...xp, sev: SEV[i] ?? 'info', n: i + 1 }));
+
+// Linked-entities graph nodes, positioned evenly around a central SUBJECT node.
+const ENTITIES = [
+  { label: 'Flawtrack', rel: 'co-founder', href: '#finding-1' },
+  { label: 'DeepStrike', rel: 'security eng', href: '#finding-2' },
+  { label: 'GitHub', rel: 'code', href: SOCIALS.github, ext: true },
+  { label: 'LinkedIn', rel: 'profile', href: SOCIALS.linkedin, ext: true },
+  { label: 'CAT Reloaded', rel: 'instructor', href: '#credentials' },
+  { label: 'Mansoura U.', rel: 'education', href: '#credentials' },
+];
+const CX = 310, CY = 175, R = 130;
+const nodes = ENTITIES.map((e, i) => {
+  const a = (-90 + i * (360 / ENTITIES.length)) * (Math.PI / 180);
+  return { ...e, x: Math.round(CX + R * Math.cos(a)), y: Math.round(CY + R * Math.sin(a)) };
+});
+
+const ghShort = SOCIALS.github.replace('https://', '');
+const liShort = SOCIALS.linkedin.replace('https://www.', '').replace(/\/$/, '');
 ---
 
 <BaseLayout>
-  <!-- Hero -->
-  <section class="hero container" aria-label="Intro">
-    <span class="hero-card"><span class="status-dot" aria-hidden="true"></span> Open to security work & collaborations</span>
-    <h1>Ibrahim Radi —<br /><span class="grad">Security Engineer</span> & builder.</h1>
-    <p class="hero-sub">
-      Technical co-founder of <strong style="color:var(--text-strong)">Flawtrack</strong>. I build attack surface
-      management, threat-intel, and brand-protection systems — and break things as a pentester, bug bounty hunter,
-      and CTF player.
-    </p>
-    <div class="hero-meta">
-      <span>📍 {SITE.location}</span>
-      <span>🛡️ ASM · Threat Intel · DevSecOps</span>
-      <span>🏁 CTF · Bug Bounty</span>
-    </div>
-    <div class="hero-actions">
-      <a class="btn btn-primary" href={`mailto:${SOCIALS.email}`}>Get in touch</a>
-      <a class="btn" href={SOCIALS.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-      {BLOG_ENABLED && <a class="btn" href="/blog">Read the blog →</a>}
-    </div>
-  </section>
-
-  <!-- About -->
-  <section id="about" class="container" aria-label="About">
-    <span class="eyebrow">whoami</span>
-    <h2 class="section-title">About</h2>
-    <div class="prose">
-      <p>
-        I'm a security engineer who likes living on both sides of the line — building the defensive platforms and
-        running the offensive tests. At <strong>Flawtrack</strong> I built the entire stack from initial code to
-        production: the core ASM, brand-protection, and threat-intel engines, the DevSecOps pipelines, the AI/RAG
-        integrations, and the dashboards that turn raw security logs into clear, visual data.
-      </p>
-      <p>
-        Before that, as a security engineer at <strong>DeepStrike</strong>, I ran penetration tests and audits,
-        managed AWS and Cloudflare security, and baked security into the SDLC. On the side I hunt bugs, compete in
-        CTFs across web, OSINT, and mobile, and teach the next wave of students through <strong>CAT Reloaded</strong>.
-      </p>
-    </div>
-  </section>
-
-  <!-- Experience -->
-  <section id="experience" class="container" aria-label="Experience">
-    <span class="eyebrow">career</span>
-    <h2 class="section-title">Experience</h2>
-    <div class="timeline">
-      {EXPERIENCE.map((xp) => (
-        <article class="xp">
-          <div class="xp-head">
-            <div>
-              <div class="xp-role">{xp.role} · <span class="xp-company">{xp.company}</span></div>
-              <div class="xp-loc">{xp.location}</div>
-            </div>
-            <div class="xp-period">{xp.period}</div>
-          </div>
-          {xp.summary && <p class="xp-summary">{xp.summary}</p>}
-          <ul>
-            {xp.points.map((p) => <li>{p}</li>)}
-          </ul>
-          {xp.tags && (
-            <div class="tags">
-              {xp.tags.map((t) => <span class="tag">{t}</span>)}
-            </div>
-          )}
-        </article>
-      ))}
-    </div>
-  </section>
-
-  <!-- Skills -->
-  <section id="skills" class="container" aria-label="Skills">
-    <span class="eyebrow">toolkit</span>
-    <h2 class="section-title">Skills</h2>
-    <div class="skills-grid">
-      {SKILLS.map((group) => (
-        <div class="skill-card">
-          <h3>{group.title}</h3>
-          <div class="chips">
-            {group.items.map((item) => <span class="chip">{item}</span>)}
-          </div>
-        </div>
-      ))}
-    </div>
-  </section>
-
-  <!-- Awards & Education -->
-  <section id="awards" class="container" aria-label="Awards and Education">
-    <span class="eyebrow">highlights</span>
-    <h2 class="section-title">Awards & Recognition</h2>
-    <div class="cols-2">
-      <div class="list-card">
-        <h3>🏆 CTF & Competitions</h3>
-        <ul class="check-list">
-          {AWARDS.map((a) => <li>{a}</li>)}
-        </ul>
+  <div class="doc">
+    <!-- TITLE BLOCK -->
+    <section class="doc-hero" data-reveal>
+      <div>
+        <p class="dh-kicker">Dossier <b>001</b> · Subject Profile · Classification: <b>Open Source</b></p>
+        <h1 class="dh-name"><span class="grad" data-scramble>Ibrahim Radi</span></h1>
+        <p class="dh-alias">aka @ibraradi · "the technical co-founder"</p>
+        <p class="dh-assess">
+          Subject is a security engineer operating on both sides of the line — building attack-surface-management,
+          threat-intel and brand-protection platforms, and conducting offensive operations as a pentester, bug bounty
+          hunter and CTF competitor. Assessed capability: <span class="c-strong">high</span>.
+        </p>
       </div>
-      <div class="list-card">
-        <h3>🎓 Education & Certs</h3>
-        <ul class="check-list">
-          {EDUCATION.map((e) => (
-            <li>
-              <div class="meta-row">
-                <strong style="color:var(--text-strong)">{e.school}</strong>
-                <span class="badge">{e.period}</span>
-              </div>
-              <div class="sub">{e.program} · {e.note}</div>
-            </li>
+      <div class="photo" aria-label="Subject photo on file">
+        <span class="xhair tl"></span><span class="xhair tr"></span>
+        <span class="xhair bl"></span><span class="xhair br"></span>
+        IR
+      </div>
+    </section>
+
+    <!-- IDENTIFIERS -->
+    <section class="dsec" data-reveal>
+      <div class="dsec-head">
+        <span class="dsec-no">§01</span><span class="dsec-title">Identifiers</span>
+        <span class="dsec-meta">verified</span>
+      </div>
+      <div class="fields">
+        <div class="field"><div class="field-k">Full name</div><div class="field-v">Ibrahim Radi</div></div>
+        <div class="field"><div class="field-k">Handle</div><div class="field-v mono">@ibraradi</div></div>
+        <div class="field"><div class="field-k">Last known location</div><div class="field-v">{SITE.location}</div></div>
+        <div class="field"><div class="field-k">Timezone</div><div class="field-v mono">GMT+8</div></div>
+        <div class="field"><div class="field-k">Current role</div><div class="field-v">Co-Founder @ Flawtrack</div></div>
+        <div class="field"><div class="field-k">Status</div><div class="field-v">Active · open to work</div></div>
+        <div class="field"><div class="field-k">Direct line</div><div class="field-v mono"><span class="redacted" tabindex="0">+•• ••• ••• ••••</span></div></div>
+        <div class="field"><div class="field-k">Clearance</div><div class="field-v mono"><span class="redacted" tabindex="0">AWS-CCP-VERIFIED</span></div></div>
+      </div>
+    </section>
+
+    <!-- LINKED ENTITIES -->
+    <section class="dsec" data-reveal>
+      <div class="dsec-head">
+        <span class="dsec-no">§02</span><span class="dsec-title">Linked Entities</span>
+        <span class="dsec-meta">{nodes.length} associations</span>
+      </div>
+      <div class="lent">
+        <svg viewBox="0 0 620 380" role="img" aria-label="Network graph of linked entities">
+          {nodes.map((n) => <line class="lent-edge" x1={CX} y1={CY} x2={n.x} y2={n.y} />)}
+          {nodes.map((n) => (
+            <a href={n.href} class="lent-node" target={n.ext ? '_blank' : undefined} rel={n.ext ? 'noopener noreferrer' : undefined}>
+              <circle cx={n.x} cy={n.y} r="22" />
+              <text x={n.x} y={n.y + 40} text-anchor="middle">{n.label}</text>
+              <text x={n.x} y={n.y + 54} text-anchor="middle" class="rel">{n.rel}</text>
+            </a>
           ))}
-          {CERTIFICATES.map((c) => (
-            <li>
-              <strong style="color:var(--text-strong)">{c.name}</strong>
-              <div class="sub">{c.issuer}</div>
-            </li>
-          ))}
-        </ul>
+          <g class="lent-node lent-center">
+            <circle cx={CX} cy={CY} r="34" />
+            <text x={CX} y={CY + 5} text-anchor="middle">IR</text>
+          </g>
+        </svg>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Volunteering -->
-  <section id="volunteering" class="container" aria-label="Volunteering">
-    <span class="eyebrow">giving back</span>
-    <h2 class="section-title">Volunteering</h2>
-    <div class="timeline">
-      {VOLUNTEERING.map((v) => (
-        <article class="xp">
-          <div class="xp-head">
-            <div class="xp-role">{v.role}</div>
-            <div class="xp-period">{v.org}</div>
+    <!-- FINDINGS -->
+    <section class="dsec" data-reveal>
+      <div class="dsec-head">
+        <span class="dsec-no">§03</span><span class="dsec-title">Intelligence Findings</span>
+        <span class="dsec-meta">{findings.length} logged</span>
+      </div>
+      <div class="findings">
+        {findings.map((f) => (
+          <article class={`finding ${f.sev}`} id={`finding-${f.n}`} data-reveal>
+            <div class="finding-top">
+              <span class="finding-id">FINDING-{String(f.n).padStart(3, '0')}</span>
+              <span class={`sev ${f.sev}`}>{f.sev === 'crit' ? 'critical' : f.sev}</span>
+              <span class="finding-period">{f.period} · {f.location}</span>
+            </div>
+            <h3 class="finding-title">{f.role} <span class="c-muted">@</span> <span class="co">{f.company}</span></h3>
+            {f.summary && <p class="finding-sum">{f.summary}</p>}
+            <ul>
+              {f.points.map((p) => <li>{p}</li>)}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- CAPABILITY MATRIX -->
+    <section class="dsec" data-reveal>
+      <div class="dsec-head">
+        <span class="dsec-no">§04</span><span class="dsec-title">Capability Matrix</span>
+        <span class="dsec-meta">{SKILLS.length} domains</span>
+      </div>
+      <div class="matrix">
+        {SKILLS.map((g) => (
+          <div class="mx-cell">
+            <div class="mx-cat">{g.title}</div>
+            <div class="mx-tags">{g.items.map((i) => <span class="mx-tag">{i}</span>)}</div>
           </div>
-          <ul>
-            {v.points.map((p) => <li>{p}</li>)}
-          </ul>
-        </article>
-      ))}
-    </div>
-  </section>
-
-  <!-- Contact -->
-  <section id="contact" class="container" aria-label="Contact">
-    <div class="contact-card">
-      <h2>Let's build something secure.</h2>
-      <p>
-        Whether it's a security engagement, a platform to harden, or just talking shop about ASM and CTFs — my inbox
-        is open.
-      </p>
-      <div class="contact-actions">
-        <a class="btn btn-primary" href={`mailto:${SOCIALS.email}`}>{SOCIALS.email}</a>
-        <a class="btn" href={SOCIALS.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
-        <a class="btn" href={SOCIALS.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+        ))}
       </div>
-    </div>
-  </section>
+    </section>
+
+    <!-- FIELD RECORD -->
+    <section class="dsec" data-reveal>
+      <div class="dsec-head">
+        <span class="dsec-no">§05</span><span class="dsec-title">Field Record</span>
+        <span class="dsec-meta">ctf &amp; competitions</span>
+      </div>
+      <div class="record">
+        {AWARDS.map((a) => (
+          <div class="rec-row"><span class="rec-mark">★</span><span class="rec-text">{a}</span></div>
+        ))}
+      </div>
+    </section>
+
+    <!-- CREDENTIALS -->
+    <section class="dsec" id="credentials" data-reveal>
+      <div class="dsec-head">
+        <span class="dsec-no">§06</span><span class="dsec-title">Verified Credentials</span>
+        <span class="dsec-meta">education · certs · service</span>
+      </div>
+      <div class="creds">
+        {EDUCATION.map((e) => (
+          <div class="cred">
+            <div class="cred-k">Education</div>
+            <div class="cred-main">{e.school}</div>
+            <div class="cred-sub">{e.program}</div>
+            <div class="cred-sub">{e.period} · {e.note}</div>
+          </div>
+        ))}
+        {CERTIFICATES.map((c) => (
+          <div class="cred">
+            <div class="cred-k">Certification</div>
+            <div class="cred-main">{c.name}</div>
+            <div class="cred-sub">{c.issuer}</div>
+          </div>
+        ))}
+        {VOLUNTEERING.map((v) => (
+          <div class="cred">
+            <div class="cred-k">Service</div>
+            <div class="cred-main">{v.role}</div>
+            <div class="cred-sub">{v.org}</div>
+            <ul>{v.points.map((p) => <li>{p}</li>)}</ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- COMMS -->
+    <section class="dsec" data-reveal>
+      <div class="dsec-head">
+        <span class="dsec-no">§07</span><span class="dsec-title">Establish Comms</span>
+        <span class="dsec-meta">channels open</span>
+      </div>
+      <div class="dcomms">
+        <a href={`mailto:${SOCIALS.email}`}><span class="dc-k">→ email</span><span class="dc-v">{SOCIALS.email}</span></a>
+        <a href={SOCIALS.github} target="_blank" rel="noopener noreferrer"><span class="dc-k">→ github</span><span class="dc-v">{ghShort}</span></a>
+        <a href={SOCIALS.linkedin} target="_blank" rel="noopener noreferrer"><span class="dc-k">→ linkedin</span><span class="dc-v">{liShort}</span></a>
+      </div>
+    </section>
+  </div>
 </BaseLayout>

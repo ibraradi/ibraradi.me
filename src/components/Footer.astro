@@ -1,16 +1,17 @@
 ---
-import { SITE, SOCIALS, BLOG_ENABLED } from '../consts';
+import { SOCIALS } from '../consts';
 const year = new Date().getFullYear();
 ---
-
-<footer class="site-footer">
-  <div class="container footer-inner">
-    <div>© {year} {SITE.name} · built with Astro</div>
-    <div class="footer-socials">
-      <a href={SOCIALS.github} target="_blank" rel="noopener noreferrer">GitHub</a>
-      <a href={SOCIALS.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
-      <a href={`mailto:${SOCIALS.email}`}>Email</a>
-      {BLOG_ENABLED && <a href="/rss.xml">RSS</a>}
-    </div>
+<footer class="docfoot">
+  <div class="docfoot-inner">
+    <span>— END OF DOSSIER —</span>
+    <span>COMPILED {year} · IBRAHIM RADI</span>
+    <span class="sb-links">
+      <a href={SOCIALS.github} target="_blank" rel="noopener noreferrer">github</a>
+      ·
+      <a href={SOCIALS.linkedin} target="_blank" rel="noopener noreferrer">linkedin</a>
+      ·
+      <a href={`mailto:${SOCIALS.email}`}>email</a>
+    </span>
   </div>
 </footer>

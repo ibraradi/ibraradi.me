@@ -1,0 +1,213 @@
+---
+import { SITE, SOCIALS, EXPERIENCE, SKILLS, AWARDS, EDUCATION, CERTIFICATES, VOLUNTEERING } from '../consts';
+
+// Build command output from the single source of truth in consts.ts.
+const help = [
+  'Available commands:',
+  '  <span class="c-accent">whoami</span>      &mdash; the one-liner',
+  '  <span class="c-accent">about</span>       &mdash; the short version',
+  '  <span class="c-accent">skills</span>      &mdash; what I work with',
+  '  <span class="c-accent">experience</span>  &mdash; where I have worked',
+  '  <span class="c-accent">awards</span>      &mdash; CTF &amp; competitions',
+  '  <span class="c-accent">education</span>   &mdash; where I studied',
+  '  <span class="c-accent">certs</span>       &mdash; certifications',
+  '  <span class="c-accent">volunteering</span>&mdash; giving back',
+  '  <span class="c-accent">contact</span>     &mdash; reach me',
+  '  <span class="c-accent">social</span>      &mdash; links',
+  '  <span class="c-accent">clear</span>       &mdash; clear the screen',
+  '',
+  'Tips: <span class="c-muted">↑/↓ history · Tab autocomplete · or tap a chip below.</span>',
+];
+
+const whoami = [
+  `<span class="c-cyan">${SITE.name}</span> &mdash; ${SITE.tagline}`,
+  `<span class="c-muted">📍 ${SITE.location}</span>`,
+];
+
+const about = [
+  'Security engineer living on both sides of the line:',
+  'I <span class="c-strong">build</span> attack-surface-management, threat-intel and',
+  'brand-protection platforms &mdash; and <span class="c-strong">break</span> things as a',
+  'pentester, bug bounty hunter, and CTF player.',
+];
+
+const skills = SKILLS.map(
+  (g) => `<span class="c-accent">${g.title.padEnd(22)}</span>${g.items.join(', ')}`,
+);
+
+const experience = EXPERIENCE.flatMap((xp) => [
+  `<span class="c-cyan">${xp.role}</span> @ <span class="c-strong">${xp.company}</span> <span class="c-muted">— ${xp.period}</span>`,
+  `  <span class="c-muted">${xp.location}</span>`,
+]);
+
+const awards = AWARDS.map((a) => `<span class="c-accent">★</span> ${a}`);
+
+const contact = [
+  `email   <a href="mailto:${SOCIALS.email}">${SOCIALS.email}</a>`,
+  `<span class="c-muted">Drop a line anytime — security work, collabs, or just to talk shop.</span>`,
+];
+
+const social = [
+  `github    <a href="${SOCIALS.github}" target="_blank" rel="noopener noreferrer">${SOCIALS.github.replace('https://', '')}</a>`,
+  `linkedin  <a href="${SOCIALS.linkedin}" target="_blank" rel="noopener noreferrer">${SOCIALS.linkedin.replace('https://www.', '')}</a>`,
+];
+
+const education = EDUCATION.map(
+  (e) => `<span class="c-cyan">${e.school}</span> &mdash; ${e.program} <span class="c-muted">(${e.period} · ${e.note})</span>`,
+);
+
+const certs = CERTIFICATES.map(
+  (c) => `<span class="c-accent">★</span> ${c.name} <span class="c-muted">— ${c.issuer}</span>`,
+);
+
+const volunteering = VOLUNTEERING.flatMap((v) => [
+  `<span class="c-cyan">${v.role}</span> @ <span class="c-strong">${v.org}</span>`,
+  ...v.points.map((p) => `  <span class="c-muted">•</span> ${p}`),
+]);
+
+const TERM = { help, whoami, about, skills, experience, awards, education, certs, volunteering, contact, social };
+const CHIPS = ['whoami', 'skills', 'experience', 'awards', 'education', 'contact'];
+---
+
+<div class="term" data-reveal>
+  <div class="term-bar">
+    <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+    <span class="term-title">visitor@ibraradi.me: ~</span>
+  </div>
+  <div class="term-body" id="term-body">
+    <div id="term-output"></div>
+    <div class="term-input-line" id="term-input-line" hidden>
+      <span class="term-prompt"><span class="c-user">visitor@ibraradi.me</span>:~$</span>
+      <input
+        id="term-input"
+        class="term-input"
+        type="text"
+        autocomplete="off"
+        autocapitalize="off"
+        autocorrect="off"
+        spellcheck="false"
+        aria-label="Terminal command input"
+      />
+    </div>
+  </div>
+  <div class="term-chips" id="term-chips">
+    {CHIPS.map((c) => <button class="term-chip" type="button" data-cmd={c}>{c}</button>)}
+  </div>
+</div>
+
+<script type="application/json" id="term-data" set:html={JSON.stringify(TERM)}></script>
+
+<script>
+  type Lines = string[];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const data = JSON.parse(
+    document.getElementById('term-data')?.textContent || '{}',
+  ) as Record<string, Lines>;
+
+  const body = document.getElementById('term-body') as HTMLElement;
+  const output = document.getElementById('term-output') as HTMLElement;
+  const inputLine = document.getElementById('term-input-line') as HTMLElement;
+  const input = document.getElementById('term-input') as HTMLInputElement;
+  const chips = document.getElementById('term-chips') as HTMLElement;
+
+  const PROMPT = '<span class="c-user">visitor@ibraradi.me</span>:~$';
+  const history: string[] = [];
+  let hIdx = -1;
+
+  const scrollDown = () => { body.scrollTop = body.scrollHeight; };
+
+  const addLine = (html: string, cls = '') => {
+    const el = document.createElement('div');
+    el.className = 'term-line' + (cls ? ' ' + cls : '');
+    el.innerHTML = html;
+    output.appendChild(el);
+    scrollDown();
+    return el;
+  };
+
+  const printLines = (lines: Lines) => lines.forEach((l) => addLine(l));
+
+  const run = (raw: string) => {
+    const cmd = raw.trim().toLowerCase();
+    addLine(`${PROMPT} <span class="cmd-echo">${raw}</span>`);
+    if (!cmd) return;
+    history.unshift(raw);
+    hIdx = -1;
+
+    if (cmd === 'clear') { output.innerHTML = ''; return; }
+    if (cmd === 'help' || cmd === '?') { printLines(data.help); return; }
+    if (cmd === 'ls') { addLine(Object.keys(data).join('  ')); return; }
+    if (cmd === 'sudo' || cmd.startsWith('sudo ')) {
+      addLine('<span class="c-muted">Nice try.</span> Permission denied 😏');
+      return;
+    }
+    if (cmd === 'exit') { addLine('<span class="c-muted">There is no escape. Try</span> <span class="c-accent">help</span>.'); return; }
+    if (data[cmd]) { printLines(data[cmd]); return; }
+    addLine(`command not found: <span class="c-strong">${raw}</span> — type <span class="c-accent">help</span>`);
+  };
+
+  const commands = Object.keys(data).concat(['help', 'clear', 'ls']);
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const v = input.value;
+      input.value = '';
+      run(v);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (hIdx < history.length - 1) input.value = history[++hIdx] ?? '';
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (hIdx > 0) input.value = history[--hIdx] ?? '';
+      else { hIdx = -1; input.value = ''; }
+    } else if (e.key === 'Tab') {
+      e.preventDefault();
+      const m = commands.find((c) => c.startsWith(input.value.trim().toLowerCase()));
+      if (m) input.value = m;
+    }
+  });
+
+  // Click anywhere in the terminal (or a chip) focuses / runs.
+  body.addEventListener('click', () => input.focus());
+  chips.addEventListener('click', (e) => {
+    const t = (e.target as HTMLElement).closest('.term-chip') as HTMLElement | null;
+    if (!t) return;
+    run(t.dataset.cmd || '');
+    input.focus();
+  });
+
+  // Boot sequence — typed line by line, then hand over to the user.
+  const boot: Lines = [
+    '<span class="c-muted">booting ibraradi.me …</span>',
+    `<span class="c-muted">loading profile [</span><span class="c-accent">OK</span><span class="c-muted">]</span>`,
+    '',
+    `<span class="c-cyan">${(data.whoami?.[0] ?? '').replace(/<[^>]+>/g, '')}</span>`,
+    'Type <span class="c-accent">help</span> to explore, or tap a command below.',
+  ];
+
+  const typeLine = (html: string) =>
+    new Promise<void>((resolve) => {
+      // Type the visible text char-by-char while preserving inline markup.
+      const tmp = document.createElement('div');
+      tmp.innerHTML = html;
+      const full = tmp.textContent || '';
+      const el = addLine('');
+      if (reduce || full.length === 0) { el.innerHTML = html; resolve(); return; }
+      let i = 0;
+      const id = setInterval(() => {
+        i++;
+        el.textContent = full.slice(0, i);
+        scrollDown();
+        if (i >= full.length) { clearInterval(id); el.innerHTML = html; resolve(); }
+      }, 14);
+    });
+
+  (async () => {
+    for (const line of boot) await typeLine(line);
+    inputLine.hidden = false;
+    // Only autofocus if the terminal is already on screen (don't yank scroll).
+    const r = body.getBoundingClientRect();
+    if (r.top >= 0 && r.bottom <= window.innerHeight) input.focus();
+  })();
+</script>

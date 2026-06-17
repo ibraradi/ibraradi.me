@@ -1,0 +1,106 @@
+---
+// Site-wide micro-interactions. All progressive enhancement + reduced-motion safe.
+---
+<script>
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // 1) Reveal on scroll
+  const reveal = () => {
+    const els = document.querySelectorAll<HTMLElement>('[data-reveal]');
+    if (reduce || !('IntersectionObserver' in window)) {
+      els.forEach((e) => e.classList.add('in-view'));
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((en) => {
+          if (en.isIntersecting) {
+            (en.target as HTMLElement).classList.add('in-view');
+            io.unobserve(en.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
+    );
+    els.forEach((e) => io.observe(e));
+  };
+
+  // 2) Cursor-follow spotlight (hero + cards) and 3) tilt
+  const pointer = () => {
+    if (reduce) return;
+
+    document.querySelectorAll<HTMLElement>('.hero, [data-glow]').forEach((el) => {
+      el.addEventListener('pointermove', (e) => {
+        const r = el.getBoundingClientRect();
+        el.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
+        el.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
+      });
+    });
+
+    const MAX = 5;
+    document.querySelectorAll<HTMLElement>('[data-tilt]').forEach((el) => {
+      el.addEventListener('pointermove', (e) => {
+        const r = el.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+        el.style.transform = `perspective(900px) rotateY(${px * MAX}deg) rotateX(${-py * MAX}deg)`;
+      });
+      el.addEventListener('pointerleave', () => { el.style.transform = ''; });
+    });
+  };
+
+  // 4) Text scramble / decrypt
+  const scramble = () => {
+    const el = document.querySelector<HTMLElement>('[data-scramble]');
+    if (!el || reduce) return;
+    const text = el.textContent || '';
+    const chars = '!<>-_\\/[]{}=+*^?#01abcdef';
+    let frame = 0;
+    const total = 40;
+    const id = setInterval(() => {
+      frame++;
+      let out = '';
+      for (let i = 0; i < text.length; i++) {
+        out += i < (text.length * frame) / total
+          ? text[i]
+          : chars[Math.floor(Math.random() * chars.length)];
+      }
+      el.textContent = out;
+      if (frame >= total) { clearInterval(id); el.textContent = text; }
+    }, 26);
+  };
+
+  // 5) Global cursor spotlight (drives .fx-spot)
+  const spotlight = () => {
+    if (reduce) return;
+    addEventListener(
+      'pointermove',
+      (e) => {
+        const root = document.documentElement;
+        root.style.setProperty('--gx', `${(e.clientX / innerWidth) * 100}%`);
+        root.style.setProperty('--gy', `${(e.clientY / innerHeight) * 100}%`);
+      },
+      { passive: true },
+    );
+  };
+
+  // 6) Live clock — Kuala Lumpur time (runs regardless of motion prefs)
+  const clock = () => {
+    const els = document.querySelectorAll<HTMLElement>('[data-clock]');
+    if (!els.length) return;
+    const fmt = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Asia/Kuala_Lumpur',
+      hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
+    });
+    const tick = () => {
+      const t = fmt.format(new Date());
+      els.forEach((e) => (e.textContent = t));
+    };
+    tick();
+    setInterval(tick, 1000);
+  };
+
+  const start = () => { reveal(); pointer(); scramble(); spotlight(); clock(); };
+  if (document.readyState !== 'loading') start();
+  else document.addEventListener('DOMContentLoaded', start);
+</script>
