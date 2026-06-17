@@ -39,7 +39,10 @@ async function ensurePostComponent() {
     date: { type: 'datetime', pos: 1, display_name: 'Date', disable_time: true },
     excerpt: { type: 'textarea', pos: 2, display_name: 'Excerpt' },
     tags: { type: 'text', pos: 3, display_name: 'Tags (comma-separated)' },
-    content: { type: 'markdown', pos: 4, display_name: 'Content', rich_markdown: true },
+    // Plain textarea stores raw markdown verbatim. The 'markdown' field type
+    // re-serializes content and destroys fenced code blocks (``` + language),
+    // which breaks syntax highlighting — so we keep the source as raw text.
+    content: { type: 'textarea', pos: 4, display_name: 'Content (markdown)' },
   };
   const payload = { component: { name: 'post', display_name: 'Post', schema, is_root: true, is_nestable: false } };
   if (existing) {

@@ -2,7 +2,6 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { BLOG_ENABLED, SITE } from '../../consts';
 import { getPosts, getPost } from '../../lib/storyblok';
-import { marked } from 'marked';
 
 export async function getStaticPaths() {
   if (!BLOG_ENABLED) return [];
@@ -13,7 +12,7 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 // Pages are pre-rendered from getStaticPaths props; re-fetch as a safety net.
 const data = post ?? (await getPost(Astro.params.slug as string));
-const html = data ? await marked.parse(data.content || '') : '';
+const html = data?.html ?? '';
 
 const dateFmt = (d: string) =>
   d ? new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
