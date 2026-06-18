@@ -1205,6 +1205,8 @@ section {
   color: var(--sev-high);
 }
 .classbar .cb-mid { color: var(--muted); }
+.cb-home { transition: color 0.18s ease; }
+.cb-home:hover { color: var(--text-strong); }
 .classbar .cb-right { display: inline-flex; align-items: center; gap: 8px; color: var(--text); }
 .classbar .led-dot { width: 7px; height: 7px; }
 
