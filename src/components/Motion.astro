@@ -100,7 +100,19 @@
     setInterval(tick, 1000);
   };
 
-  const start = () => { reveal(); pointer(); scramble(); spotlight(); clock(); };
+  // 7) Scroll cue — fades out once the user starts scrolling
+  const scrollCue = () => {
+    const cue = document.querySelector<HTMLElement>('.scroll-cue');
+    if (!cue) return;
+    const onScroll = () => {
+      const nearBottom = innerHeight + scrollY >= document.body.scrollHeight - 80;
+      cue.classList.toggle('hide', scrollY > 60 || nearBottom);
+    };
+    addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  };
+
+  const start = () => { reveal(); pointer(); scramble(); spotlight(); clock(); scrollCue(); };
   if (document.readyState !== 'loading') start();
   else document.addEventListener('DOMContentLoaded', start);
 </script>
