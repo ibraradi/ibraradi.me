@@ -19,3 +19,6 @@ pnpm-debug.log*
 Thumbs.db
 .vscode/
 .idea/
+
+# one-off social assets (keep local, do not commit)
+firestore-social*.png
