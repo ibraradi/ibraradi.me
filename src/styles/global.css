@@ -1199,7 +1199,7 @@ section {
   border-bottom: 1px solid var(--border-strong);
 }
 .classbar-inner {
-  max-width: 980px; margin-inline: auto; padding: 0 20px; height: 46px; gap: 12px;
+  max-width: 980px; margin-inline: auto; padding: 0 20px; min-height: 46px; gap: 12px;
   display: flex; align-items: center; justify-content: space-between;
   font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
   color: var(--sev-high);
