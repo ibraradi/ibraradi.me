@@ -10,6 +10,7 @@ export type BlogPost = {
   excerpt: string;
   tags: string[];
   html: string; // pre-rendered, Shiki-highlighted
+  toc: { id: string; text: string }[];
 };
 
 const posts = postsData as BlogPost[];

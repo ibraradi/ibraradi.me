@@ -40,7 +40,7 @@ const articleLd = data && {
   publishedTime={isoDate}
   jsonLd={articleLd || undefined}
 >
-  <div class="doc">
+  <div class="doc post-shell">
     <article class="article post-article">
       <a class="back" href="/blog">← field notes</a>
       <header class="article-header">
@@ -52,5 +52,20 @@ const articleLd = data && {
       </header>
       <div class="article-body" set:html={html}></div>
     </article>
+
+    {data && data.toc.length > 1 && (
+      <aside class="toc" aria-label="On this page">
+        <div class="toc-inner">
+          <div class="toc-head">// on this page</div>
+          <nav>
+            <ol>
+              {data.toc.map((t) => (
+                <li><a href={`#${t.id}`}>{t.text}</a></li>
+              ))}
+            </ol>
+          </nav>
+        </div>
+      </aside>
+    )}
   </div>
 </BaseLayout>

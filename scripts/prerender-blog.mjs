@@ -37,6 +37,26 @@ function toTags(t) {
   return Array.isArray(t) ? t : [];
 }
 
+// Add anchor ids to <h2> headings and collect a table of contents.
+function withHeadingsAndToc(rawHtml) {
+  const toc = [];
+  const seen = new Set();
+  const html = rawHtml.replace(/<h2>([\s\S]*?)<\/h2>/g, (_m, inner) => {
+    const text = inner
+      .replace(/<[^>]+>/g, '')
+      .replace(/&amp;/g, '&')
+      .replace(/&#39;/g, "'")
+      .replace(/&quot;/g, '"')
+      .trim();
+    let id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'section';
+    while (seen.has(id)) id += '-x';
+    seen.add(id);
+    toc.push({ id, text });
+    return `<h2 id="${id}">${inner}</h2>`;
+  });
+  return { html, toc };
+}
+
 async function main() {
   let stories = [];
   if (TOKEN) {
@@ -56,6 +76,7 @@ async function main() {
   const posts = [];
   for (const s of stories) {
     const c = s.content || {};
+    const { html, toc } = withHeadingsAndToc(await marked.parse(c.content || ''));
     posts.push({
       slug: s.slug,
       fullSlug: s.full_slug,
@@ -63,7 +84,8 @@ async function main() {
       date: c.date || s.first_published_at || s.created_at || '',
       excerpt: c.excerpt || '',
       tags: toTags(c.tags),
-      html: await marked.parse(c.content || ''),
+      html,
+      toc,
     });
   }
 
