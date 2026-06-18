@@ -1461,7 +1461,9 @@ section {
 .toc nav a:hover { color: var(--accent); border-left-color: var(--accent); }
 
 @media (max-width: 920px) {
-  .post-shell { grid-template-columns: 1fr; }
+  /* minmax(0, …) lets the column shrink below its children's min-content,
+     so wide code/figures don't force horizontal overflow */
+  .post-shell { grid-template-columns: minmax(0, 1fr); }
   /* sidebar TOC doesn't fit a narrow column — hide it (the headings are still
      in the article) */
   .toc { display: none; }
@@ -1547,7 +1549,7 @@ section {
   border: 1px solid color-mix(in srgb, var(--accent-2) 22%, transparent);
   padding: 0.1em 0.4em;
   border-radius: 6px;
-  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 /* Shiki code blocks */
