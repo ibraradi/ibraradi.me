@@ -1199,11 +1199,12 @@ section {
   border-bottom: 1px solid var(--border-strong);
 }
 .classbar-inner {
-  max-width: 980px; margin-inline: auto; padding: 0 20px; height: 46px;
+  max-width: 980px; margin-inline: auto; padding: 0 20px; height: 46px; gap: 12px;
   display: flex; align-items: center; justify-content: space-between;
   font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
   color: var(--sev-high);
 }
+.classbar-inner > * { white-space: nowrap; }
 .classbar .cb-mid { color: var(--muted); }
 .cb-home { transition: color 0.18s ease; }
 .cb-home:hover { color: var(--text-strong); }
@@ -1447,17 +1448,10 @@ section {
 .toc nav a:hover { color: var(--accent); border-left-color: var(--accent); }
 
 @media (max-width: 920px) {
-  .post-shell { grid-template-columns: 1fr; gap: 22px; }
-  .toc { order: -1; }
-  .toc-inner {
-    position: static;
-    border-left: 0;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px 18px;
-    background: var(--paper);
-  }
-  .toc nav a { margin-left: -18px; padding-left: 16px; }
+  .post-shell { grid-template-columns: 1fr; }
+  /* sidebar TOC doesn't fit a narrow column — hide it (the headings are still
+     in the article) */
+  .toc { display: none; }
 }
 
 /* ---------- Rich article typography ---------- */
@@ -1637,6 +1631,17 @@ section {
 .note-mini:hover .nm-title { color: var(--accent); }
 .note-mini .nm-go { font-family: var(--mono); font-size: 0.74rem; color: var(--accent); }
 .notes-all { display: inline-block; margin-top: 14px; font-family: var(--mono); font-size: 0.8rem; color: var(--accent); }
+/* keep long links/headers from forcing horizontal scroll */
+.article-body a { overflow-wrap: break-word; }
+.dsec-head { flex-wrap: wrap; }
+
 @media (max-width: 560px) {
   .note-mini { grid-template-columns: 1fr; }
+  /* classification bar: drop the case id, tighten so it stays one line */
+  .classbar-inner { font-size: 0.6rem; letter-spacing: 0.04em; padding: 0 14px; gap: 8px; }
+  .classbar .cb-mid { display: none; }
+  .doc, .hud-wrap { padding-left: 16px; padding-right: 16px; }
+  .dsec-meta { display: none; }
+  .doc-hero { padding-top: 24px; }
+  .article-body { font-size: 0.98rem; }
 }
