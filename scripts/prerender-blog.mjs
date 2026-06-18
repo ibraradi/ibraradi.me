@@ -62,23 +62,35 @@ function withHeadingsAndToc(rawHtml) {
 // markdown with a placeholder on its own line, e.g.  [[fig-transport]]
 const FIGURES = {
   'fig-transport': `<figure class="diagram">
-<svg viewBox="0 0 720 248" role="img" aria-label="A normal proxy sees Firestore as one opaque connection">
+<svg viewBox="0 0 760 360" role="img" aria-label="Why a normal proxy sees Firestore as one opaque connection">
 <defs><marker id="ah1" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="d-arrow"/></marker></defs>
-<text class="d-lane" x="14" y="28">ORDINARY REST</text>
-<rect class="d-box" x="56" y="42" width="104" height="44" rx="8"/><text class="d-t" x="108" y="69" text-anchor="middle">app</text>
-<rect class="d-box" x="560" y="42" width="118" height="44" rx="8"/><text class="d-t" x="619" y="69" text-anchor="middle">server</text>
-<line class="d-edge" x1="166" y1="56" x2="554" y2="56" marker-end="url(#ah1)"/><text class="d-s" x="360" y="49" text-anchor="middle">request</text>
-<line class="d-edge-dim" x1="554" y1="72" x2="172" y2="72" marker-end="url(#ah1)"/><text class="d-s" x="360" y="86" text-anchor="middle">response</text>
-<text class="d-ok" x="360" y="112" text-anchor="middle">proxy logs one entry per pair   [ visible ]</text>
-<line class="d-div" x1="14" y1="130" x2="706" y2="130"/>
-<text class="d-lane" x="14" y="158">FIRESTORE  ·  gRPC OVER HTTP/2</text>
-<rect class="d-box" x="56" y="172" width="104" height="44" rx="8"/><text class="d-t" x="108" y="199" text-anchor="middle">app</text>
-<rect class="d-box" x="560" y="172" width="118" height="44" rx="8"/><text class="d-t" x="619" y="199" text-anchor="middle">server</text>
-<line class="d-pipe" x1="166" y1="194" x2="560" y2="194"/>
-<text class="d-s" x="363" y="187" text-anchor="middle">one long-lived stream — protobuf Listen / Write frames</text>
-<text class="d-no" x="360" y="234" text-anchor="middle">proxy sees one opaque pipe; writes hidden inside   [ invisible ]</text>
+<text class="d-lane" x="14" y="26">ORDINARY REST  ·  PLAIN HTTP</text>
+<rect class="d-box" x="40" y="44" width="108" height="46" rx="8"/><text class="d-t" x="94" y="72" text-anchor="middle">app</text>
+<rect class="d-box" x="612" y="44" width="108" height="46" rx="8"/><text class="d-t" x="666" y="72" text-anchor="middle">server</text>
+<line class="d-edge" x1="152" y1="58" x2="606" y2="58" marker-end="url(#ah1)"/><text class="d-s" x="379" y="51" text-anchor="middle">GET /v1/profile</text>
+<line class="d-edge-dim" x1="606" y1="78" x2="156" y2="78" marker-end="url(#ah1)"/><text class="d-s" x="379" y="94" text-anchor="middle">200 · JSON body</text>
+<rect class="d-chip" x="196" y="106" width="116" height="22" rx="5"/><text class="d-chip-t" x="254" y="121" text-anchor="middle">GET /profile</text>
+<rect class="d-chip" x="320" y="106" width="116" height="22" rx="5"/><text class="d-chip-t" x="378" y="121" text-anchor="middle">POST /login</text>
+<rect class="d-chip" x="444" y="106" width="120" height="22" rx="5"/><text class="d-chip-t" x="504" y="121" text-anchor="middle">PATCH /name</text>
+<text class="d-ok" x="379" y="152" text-anchor="middle">proxy logs every request as its own entry   [ fully visible ]</text>
+<line class="d-div" x1="14" y1="182" x2="746" y2="182"/>
+<text class="d-lane" x="14" y="212">FIRESTORE  ·  gRPC OVER HTTP/2 (TLS)</text>
+<rect class="d-box" x="40" y="230" width="108" height="46" rx="8"/><text class="d-t" x="94" y="258" text-anchor="middle">app</text>
+<rect class="d-box" x="612" y="230" width="108" height="46" rx="8"/><text class="d-t" x="666" y="258" text-anchor="middle">server</text>
+<text class="d-s" x="380" y="240" text-anchor="middle">one long-lived stream — protobuf frames, multiplexed</text>
+<line class="d-edge-dim" x1="148" y1="259" x2="612" y2="259"/>
+<rect class="d-frame" x="162" y="251" width="40" height="16" rx="3"/><text class="d-fl" x="182" y="263" text-anchor="middle">W</text>
+<rect class="d-frame2" x="218" y="251" width="40" height="16" rx="3"/><text class="d-fl" x="238" y="263" text-anchor="middle">L</text>
+<rect class="d-frame" x="274" y="251" width="40" height="16" rx="3"/><text class="d-fl" x="294" y="263" text-anchor="middle">W</text>
+<rect class="d-frame2" x="330" y="251" width="40" height="16" rx="3"/><text class="d-fl" x="350" y="263" text-anchor="middle">L</text>
+<rect class="d-frame" x="386" y="251" width="40" height="16" rx="3"/><text class="d-fl" x="406" y="263" text-anchor="middle">W</text>
+<rect class="d-frame2" x="442" y="251" width="40" height="16" rx="3"/><text class="d-fl" x="462" y="263" text-anchor="middle">L</text>
+<rect class="d-frame" x="498" y="251" width="40" height="16" rx="3"/><text class="d-fl" x="518" y="263" text-anchor="middle">W</text>
+<rect class="d-frame2" x="554" y="251" width="40" height="16" rx="3"/><text class="d-fl" x="574" y="263" text-anchor="middle">L</text>
+<rect class="d-chip-no" x="244" y="290" width="272" height="22" rx="5"/><text class="d-chip-nt" x="380" y="305" text-anchor="middle">CONNECT firestore.googleapis.com:443</text>
+<text class="d-no" x="380" y="338" text-anchor="middle">proxy sees one opaque connection — every op hidden inside   [ invisible ]</text>
 </svg>
-<figcaption><b>Fig. 01</b> — the transport mismatch. Discrete REST pairs each surface in the proxy; Firestore multiplexes every read and write inside a single stream, so individual operations never appear.</figcaption>
+<figcaption><b>Fig. 01</b> — the transport mismatch. Plain REST gives the proxy one entry per request; Firestore multiplexes every read (<b>L</b>isten) and write (<b>W</b>rite) as binary protobuf frames inside a single TLS stream, so individual operations never surface.</figcaption>
 </figure>`,
   'fig-pipeline': `<figure class="diagram">
 <svg viewBox="0 0 720 292" role="img" aria-label="One capture feeding two front-ends">

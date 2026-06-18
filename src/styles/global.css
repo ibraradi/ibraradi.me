@@ -1608,6 +1608,13 @@ section {
 .diagram .d-lane { fill: var(--accent); font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; }
 .diagram .d-ok { fill: var(--accent); font-family: var(--mono); font-size: 11.5px; }
 .diagram .d-no { fill: var(--sev-crit); font-family: var(--mono); font-size: 11.5px; }
+.diagram .d-chip { fill: rgba(52, 211, 153, 0.1); stroke: rgba(52, 211, 153, 0.35); stroke-width: 1; }
+.diagram .d-chip-no { fill: rgba(255, 107, 129, 0.08); stroke: rgba(255, 107, 129, 0.32); stroke-width: 1; }
+.diagram .d-chip-t { fill: var(--accent); font-family: var(--mono); font-size: 11px; }
+.diagram .d-chip-nt { fill: var(--sev-crit); font-family: var(--mono); font-size: 11px; }
+.diagram .d-frame { fill: var(--accent); opacity: 0.85; }
+.diagram .d-frame2 { fill: var(--accent-2); opacity: 0.7; }
+.diagram .d-fl { fill: #0a0e14; font-family: var(--mono); font-size: 9px; font-weight: 700; }
 
 .article-body table {
   width: 100%;
