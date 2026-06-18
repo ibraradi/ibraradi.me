@@ -1410,13 +1410,15 @@ section {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 212px;
   gap: 48px;
-  align-items: start;
+  /* stretch the TOC column to the article height so the sticky TOC stays
+     pinned the whole way down instead of scrolling out of view */
+  align-items: stretch;
 }
 .post-shell .post-article { max-width: none; margin: 0; }
 
 .toc-inner {
   position: sticky;
-  top: 68px;
+  top: 104px;
   font-family: var(--mono);
   border-left: 1px solid var(--border);
   padding-left: 16px;
