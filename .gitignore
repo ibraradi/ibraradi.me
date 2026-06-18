@@ -2,6 +2,8 @@
 dist/
 # generated types
 .astro/
+# generated content (rebuilt by scripts/prerender-blog.mjs)
+public/og/
 # dependencies
 node_modules/
 # logs

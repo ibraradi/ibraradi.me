@@ -37,6 +37,7 @@ const articleLd = data && {
   description={data?.excerpt}
   path={`/blog/${data?.slug}/`}
   ogType="article"
+  image={data ? `/og/${data.slug}.png` : undefined}
   publishedTime={isoDate}
   jsonLd={articleLd || undefined}
 >

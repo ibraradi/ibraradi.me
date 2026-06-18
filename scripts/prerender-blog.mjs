@@ -4,6 +4,7 @@
 // Runs in plain Node — where Shiki's grammar loading works reliably (it breaks
 // when bundled into the Astro/Vite build). Astro then just outputs this HTML.
 import { writeFile, mkdir } from 'node:fs/promises';
+import sharp from 'sharp';
 import { marked } from 'marked';
 import markedShiki from 'marked-shiki';
 import { codeToHtml } from 'shiki';
@@ -101,6 +102,49 @@ function injectFigures(html) {
   return html.replace(/<p>\s*\[\[([a-z0-9-]+)\]\]\s*<\/p>/g, (_m, key) => FIGURES[key] || '');
 }
 
+// ---- per-post social thumbnail (1200x630), generated from the title ----
+function esc(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function wrapText(text, max) {
+  const words = String(text).split(/\s+/);
+  const lines = [];
+  let cur = '';
+  for (const w of words) {
+    if (cur && (cur + ' ' + w).length > max) { lines.push(cur); cur = w; }
+    else cur = cur ? cur + ' ' + w : w;
+  }
+  if (cur) lines.push(cur);
+  return lines;
+}
+function ogSvg({ title, date, tags }) {
+  let lines = wrapText(title, 24);
+  let fs = 64, lh = 78;
+  if (lines.length > 3) { lines = wrapText(title, 30); fs = 52; lh = 64; }
+  if (lines.length > 4) { lines = lines.slice(0, 4); lines[3] = lines[3].replace(/[^\w)]+$/, '') + '…'; }
+  const blockH = lines.length * lh;
+  const topY = Math.round(300 - blockH / 2);
+  const dateLabel = date
+    ? new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase()
+    : '';
+  const meta = [dateLabel, (tags || []).slice(0, 4).join('  ·  ')].filter(Boolean).join('       ');
+  const titleSvg = lines
+    .map((l, i) =>
+      `<text x="104" y="${Math.round(topY + i * lh + fs * 0.78)}" font-family="Helvetica, Arial, sans-serif" font-size="${fs}" font-weight="bold" fill="#f4f7fb">${esc(l)}</text>`)
+    .join('');
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#34d399"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
+<rect width="1200" height="630" fill="#0a0e14"/>
+<rect x="1.5" y="1.5" width="1197" height="627" rx="16" fill="none" stroke="#1e2a3a" stroke-width="2"/>
+<rect x="80" y="${topY}" width="6" height="${blockH}" fill="url(#g)"/>
+<text x="104" y="118" font-family="monospace" font-size="25" letter-spacing="6" fill="#34d399">// FIELD NOTES · OSINT DOSSIER</text>
+${titleSvg}
+<text x="104" y="556" font-family="monospace" font-size="24" letter-spacing="2" fill="#8a99b0">${esc(meta)}</text>
+<text x="104" y="595" font-family="monospace" font-size="26" letter-spacing="3" fill="#34d399">ibraradi.me</text>
+<text x="1086" y="120" font-family="monospace" font-size="72" font-weight="bold" fill="url(#g)">IR</text>
+</svg>`;
+}
+
 async function main() {
   let stories = [];
   if (TOKEN) {
@@ -118,10 +162,11 @@ async function main() {
   }
 
   const posts = [];
+  await mkdir('public/og', { recursive: true });
   for (const s of stories) {
     const c = s.content || {};
     const { html, toc } = withHeadingsAndToc(injectFigures(await marked.parse(c.content || '')));
-    posts.push({
+    const post = {
       slug: s.slug,
       fullSlug: s.full_slug,
       title: c.title || s.name,
@@ -130,7 +175,10 @@ async function main() {
       tags: toTags(c.tags),
       html,
       toc,
-    });
+    };
+    posts.push(post);
+    // Auto-generate a 1200x630 social thumbnail from the title.
+    await sharp(Buffer.from(ogSvg(post))).png().toFile(`public/og/${post.slug}.png`);
   }
 
   await mkdir('src/generated', { recursive: true });
