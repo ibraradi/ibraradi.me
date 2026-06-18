@@ -46,6 +46,8 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   min-height: 100vh;
+  /* never allow a page-level horizontal scroll (clip is sticky-safe, unlike hidden) */
+  overflow-x: clip;
 }
 
 a {
@@ -1377,6 +1379,17 @@ section {
   .fields, .matrix { grid-template-columns: 1fr; }
   .creds, .dcomms { grid-template-columns: 1fr; }
   .finding-period { margin-left: 0; width: 100%; }
+  /* on phones, soft-wrap code instead of an internal left/right scroll */
+  .article-body pre.shiki,
+  .article-body pre.astro-code {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    overflow-x: visible;
+    font-size: 0.8rem;
+  }
+  .article-body pre.shiki code,
+  .article-body pre.astro-code code { white-space: inherit; }
+  .feed-row { grid-template-columns: 1fr; }
 }
 
 /* ---------- Blog (field notes) ---------- */
