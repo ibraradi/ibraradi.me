@@ -110,6 +110,39 @@ const FIGURES = {
 </figure>`,
 };
 
+FIGURES['fig-jwt-arch'] = `<figure class="diagram">
+<svg viewBox="0 0 720 286" role="img" aria-label="Multi-tenant SaaS architecture with the JWT and Source-header flaw">
+<defs><marker id="ajw1" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="d-arrow"/></marker></defs>
+<text class="d-lane" x="14" y="26">MULTI-TENANT SAAS · SEGMENTED BY SUBDOMAIN</text>
+<rect class="d-box-a" x="28" y="50" width="196" height="50" rx="9"/><text class="d-t" x="126" y="80" text-anchor="middle">b-one.target.com</text>
+<rect class="d-box-a" x="28" y="132" width="196" height="50" rx="9"/><text class="d-t" x="126" y="162" text-anchor="middle">b-two.target.com</text>
+<rect class="d-box" x="476" y="86" width="216" height="60" rx="9"/><text class="d-t" x="584" y="112" text-anchor="middle">api.target.com</text><text class="d-s" x="584" y="131" text-anchor="middle">one shared API · all tenants</text>
+<line class="d-edge-dim" x1="224" y1="75" x2="474" y2="106" marker-end="url(#ajw1)"/><text class="d-no" x="352" y="82" text-anchor="middle">Source: B-One</text>
+<line class="d-edge-dim" x1="224" y1="157" x2="474" y2="126" marker-end="url(#ajw1)"/><text class="d-no" x="352" y="166" text-anchor="middle">Source: B-Two</text>
+<text class="d-s" x="360" y="212" text-anchor="middle">tenant routing trusts the client-set Source header</text>
+<text class="d-s" x="360" y="234" text-anchor="middle">JWT identifies the user by email (username) — no tenant_id / aud / scope</text>
+<text class="d-no" x="360" y="268" text-anchor="middle">✕ nothing cryptographically binds a token to its tenant</text>
+</svg>
+<figcaption><b>Fig. 01</b> — the architecture. Two subdomains share one API; tenants are told apart only by a client-supplied <code>Source</code> header, and JWTs are keyed on email — so a token carries no proof of which tenant it belongs to.</figcaption>
+</figure>`;
+
+FIGURES['fig-jwt-attack'] = `<figure class="diagram">
+<svg viewBox="0 0 720 268" role="img" aria-label="Cross-tenant JWT account takeover flow">
+<defs><marker id="ajw2" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="d-arrow"/></marker></defs>
+<text class="d-lane" x="14" y="24">THE TAKEOVER</text>
+<rect class="d-box" x="20" y="42" width="184" height="62" rx="9"/><text class="d-t" x="112" y="68" text-anchor="middle">register victim email</text><text class="d-s" x="112" y="86" text-anchor="middle">on b-two → get JWT</text>
+<rect class="d-box" x="266" y="42" width="192" height="62" rx="9"/><text class="d-t" x="362" y="66" text-anchor="middle">replay to api.target.com</text><text class="d-s" x="362" y="84" text-anchor="middle">Authorization: JWT(b-two)</text><text class="d-s" x="362" y="98" text-anchor="middle">Source: B-One</text>
+<rect class="d-box-a" x="520" y="42" width="176" height="62" rx="9"/><text class="d-t" x="608" y="68" text-anchor="middle">b-one account</text><text class="d-s" x="608" y="86" text-anchor="middle">taken over</text>
+<line class="d-edge" x1="204" y1="73" x2="264" y2="73" marker-end="url(#ajw2)"/>
+<line class="d-edge" x1="458" y1="73" x2="518" y2="73" marker-end="url(#ajw2)"/>
+<text class="d-s" x="360" y="142" text-anchor="middle">↳ then repeat with an admin email (found via OSINT)</text>
+<rect class="d-box" x="20" y="160" width="184" height="56" rx="9"/><text class="d-t" x="112" y="186" text-anchor="middle">admin email</text><text class="d-s" x="112" y="204" text-anchor="middle">register on b-two</text>
+<line class="d-edge" x1="204" y1="188" x2="300" y2="188" marker-end="url(#ajw2)"/>
+<rect class="d-box-a" x="302" y="160" width="394" height="56" rx="9"/><text class="d-t" x="499" y="186" text-anchor="middle">full admin across the platform</text><text class="d-s" x="499" y="204" text-anchor="middle">all users · reset creds · logs · billing</text>
+</svg>
+<figcaption><b>Fig. 02</b> — the exploit. A JWT minted on one tenant is replayed against another by flipping the <code>Source</code> header; trusted by email alone, it impersonates the matching user — then the same move with an admin's email yields full control.</figcaption>
+</figure>`;
+
 function injectFigures(html) {
   return html.replace(/<p>\s*\[\[([a-z0-9-]+)\]\]\s*<\/p>/g, (_m, key) => FIGURES[key] || '');
 }
