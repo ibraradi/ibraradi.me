@@ -143,6 +143,79 @@ FIGURES['fig-jwt-attack'] = `<figure class="diagram">
 <figcaption><b>Fig. 02</b> — the exploit. A JWT minted on one tenant is replayed against another by flipping the <code>Source</code> header; trusted by email alone, it impersonates the matching user — then the same move with an admin's email yields full control.</figcaption>
 </figure>`;
 
+FIGURES['fig-response-manip'] = `<figure class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="Free to paid by rewriting the response the client trusts">
+<defs><marker id="arm" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="d-arrow"/></marker></defs>
+<text class="d-lane" x="14" y="26">CLIENT-SIDE ENTITLEMENTS · THE GATE LIVES IN THE RESPONSE</text>
+<rect class="d-box" x="24" y="60" width="150" height="58" rx="9"/><text class="d-t" x="99" y="86" text-anchor="middle">server</text><text class="d-s" x="99" y="104" text-anchor="middle">sends index page</text>
+<rect class="d-box-a" x="275" y="60" width="170" height="58" rx="9"/><text class="d-t" x="360" y="86" text-anchor="middle">browser extension</text><text class="d-s" x="360" y="104" text-anchor="middle">rewrite response stream</text>
+<rect class="d-box" x="546" y="60" width="150" height="58" rx="9"/><text class="d-t" x="621" y="86" text-anchor="middle">app (browser)</text><text class="d-s" x="621" y="104" text-anchor="middle">renders as paid</text>
+<line class="d-edge" x1="174" y1="89" x2="273" y2="89" marker-end="url(#arm)"/>
+<line class="d-edge" x1="445" y1="89" x2="544" y2="89" marker-end="url(#arm)"/>
+<text class="d-lane" x="14" y="162">BEFORE · AS SERVED TO A FREE USER</text>
+<rect class="d-chip-no" x="24" y="176" width="320" height="24" rx="5"/><text class="d-chip-nt" x="184" y="192" text-anchor="middle">User.Plan = "Free"  ·  x5 in response</text>
+<rect class="d-chip-no" x="24" y="208" width="320" height="24" rx="5"/><text class="d-chip-nt" x="184" y="224" text-anchor="middle">FeaturesMap: false · "Limited_Access"</text>
+<text class="d-lane" x="376" y="162">AFTER · REWRITTEN IN FLIGHT</text>
+<rect class="d-chip" x="376" y="176" width="320" height="24" rx="5"/><text class="d-chip-t" x="536" y="192" text-anchor="middle">s/Free/Paid/g → User.Plan = "Paid"</text>
+<rect class="d-chip" x="376" y="208" width="320" height="24" rx="5"/><text class="d-chip-t" x="536" y="224" text-anchor="middle">FeaturesMap: true · "Full_Access"</text>
+<text class="d-no" x="360" y="268" text-anchor="middle">✕ no server-side check — the client trusts the response it is given</text>
+</svg>
+<figcaption><b>Fig. 01</b> — the entitlement gate lived entirely in the response. The extension rewrites the index-page stream in flight, flipping the <code>Plan</code> string and every feature flag, so a free account renders with full paid access.</figcaption>
+</figure>`;
+
+FIGURES['fig-soql-xss'] = `<figure class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="Stored XSS via a SOQL query console that returns HTML">
+<defs><marker id="asx" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="d-arrow"/></marker></defs>
+<text class="d-lane" x="14" y="26">STORED PAYLOAD → SOQL CONSOLE → HTML RESPONSE</text>
+<rect class="d-box-a" x="24" y="54" width="184" height="66" rx="9"/><text class="d-t" x="116" y="80" text-anchor="middle">attacker</text><text class="d-s" x="116" y="98" text-anchor="middle">seeds XSS in a user record</text><text class="d-s" x="116" y="112" text-anchor="middle">on site.redacted.sites</text>
+<rect class="d-box" x="268" y="54" width="184" height="66" rx="9"/><text class="d-t" x="360" y="80" text-anchor="middle">QueryConsole</text><text class="d-s" x="360" y="98" text-anchor="middle">api.redacted.com</text><text class="d-s" x="360" y="112" text-anchor="middle">SELECT … FROM User</text>
+<rect class="d-box" x="512" y="54" width="184" height="66" rx="9"/><text class="d-t" x="604" y="80" text-anchor="middle">console user</text><text class="d-s" x="604" y="98" text-anchor="middle">admin or anyone with</text><text class="d-s" x="604" y="112" text-anchor="middle">QueryConsole access</text>
+<line class="d-edge-dim" x1="208" y1="86" x2="266" y2="86" marker-end="url(#asx)"/><text class="d-s" x="237" y="78" text-anchor="middle">store</text>
+<line class="d-edge" x1="452" y1="86" x2="510" y2="86" marker-end="url(#asx)"/><text class="d-s" x="481" y="78" text-anchor="middle">render</text>
+<rect class="d-chip" x="150" y="152" width="420" height="26" rx="5"/><text class="d-chip-t" x="360" y="169" text-anchor="middle">GET /QueryConsole?q=SELECT Id,FirstName,… FROM User</text>
+<rect class="d-chip-no" x="150" y="188" width="420" height="26" rx="5"/><text class="d-chip-nt" x="360" y="205" text-anchor="middle">Content-Type: text/html — not JSON, not encoded</text>
+<text class="d-no" x="360" y="248" text-anchor="middle">✕ the dashboard UI encoded the output, the raw endpoint did not</text>
+<text class="d-ok" x="360" y="274" text-anchor="middle">payload executes for every consumer of the endpoint</text>
+</svg>
+<figcaption><b>Fig. 01</b> — the dashboard escaped query results, but the underlying <code>QueryConsole</code> endpoint returned raw HTML. A payload stored in a user record on the managed site executes in the browser of anyone who runs the query.</figcaption>
+</figure>`;
+
+FIGURES['fig-appt-arch'] = `<figure class="diagram">
+<svg viewBox="0 0 720 250" role="img" aria-label="Appointment booking architecture with GET-parameter session tokens">
+<defs><marker id="aap" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="d-arrow"/></marker></defs>
+<text class="d-lane" x="14" y="26">APPOINTMENT BOOKING · SESSIONS CARRIED IN GET PARAMETERS</text>
+<rect class="d-box-a" x="28" y="54" width="176" height="60" rx="9"/><text class="d-t" x="116" y="80" text-anchor="middle">admin</text><text class="d-s" x="116" y="98" text-anchor="middle">manages appointments</text>
+<rect class="d-box" x="272" y="54" width="176" height="60" rx="9"/><text class="d-t" x="360" y="80" text-anchor="middle">admin panel</text><text class="d-s" x="360" y="98" text-anchor="middle">appointment manager</text>
+<rect class="d-box" x="516" y="54" width="180" height="60" rx="9"/><text class="d-t" x="606" y="80" text-anchor="middle">booking website</text><text class="d-s" x="606" y="98" text-anchor="middle">PHP back end</text>
+<line class="d-edge" x1="204" y1="84" x2="270" y2="84" marker-end="url(#aap)"/>
+<line class="d-edge-dim" x1="448" y1="84" x2="514" y2="84" marker-end="url(#aap)"/>
+<rect class="d-box-a" x="516" y="166" width="180" height="56" rx="9"/><text class="d-t" x="606" y="190" text-anchor="middle">guest</text><text class="d-s" x="606" y="208" text-anchor="middle">quick visit · no account</text>
+<line class="d-edge" x1="606" y1="166" x2="606" y2="116" marker-end="url(#aap)"/><text class="d-s" x="606" y="142" text-anchor="middle">books</text>
+<rect class="d-chip-no" x="28" y="150" width="430" height="26" rx="5"/><text class="d-chip-nt" x="243" y="167" text-anchor="middle">?…&amp;PHPSESSID=…  →  session token rides in the URL</text>
+<text class="d-no" x="243" y="206" text-anchor="middle">✕ leaks to history, logs, referrers, Wayback</text>
+</svg>
+<figcaption><b>Fig. 01</b> — the architecture. Guests book appointments without an account; the site tracks sessions with a <code>PHPSESSID</code> in the query string instead of a cookie, so the token leaks into archived URLs.</figcaption>
+</figure>`;
+
+FIGURES['fig-upload-xss'] = `<figure class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="Stored XSS through an unsanitised upload URL reflected into the admin panel">
+<defs><marker id="aux" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="d-arrow"/></marker></defs>
+<text class="d-lane" x="14" y="26">FILE UPLOAD · ATTACKER-CONTROLLED URL REFLECTED TO ADMIN</text>
+<rect class="d-box-a" x="28" y="52" width="150" height="54" rx="9"/><text class="d-t" x="103" y="76" text-anchor="middle">guest</text><text class="d-s" x="103" y="94" text-anchor="middle">uploads a file</text>
+<rect class="d-box" x="430" y="52" width="170" height="54" rx="9"/><text class="d-t" x="515" y="76" text-anchor="middle">cloud storage</text><text class="d-s" x="515" y="94" text-anchor="middle">third-party service</text>
+<line class="d-edge" x1="178" y1="72" x2="428" y2="72" marker-end="url(#aux)"/><text class="d-s" x="303" y="64" text-anchor="middle">1 · upload file</text>
+<line class="d-edge-dim" x1="428" y1="92" x2="180" y2="92" marker-end="url(#aux)"/><text class="d-s" x="304" y="106" text-anchor="middle">2 · returns file URL, saved in a post parameter</text>
+<rect class="d-box-a" x="28" y="150" width="150" height="56" rx="9"/><text class="d-t" x="103" y="174" text-anchor="middle">guest</text><text class="d-s" x="103" y="192" text-anchor="middle">controls the URL</text>
+<rect class="d-box" x="285" y="150" width="170" height="56" rx="9"/><text class="d-t" x="370" y="174" text-anchor="middle">server</text><text class="d-s" x="370" y="192" text-anchor="middle">stores URL, no sanitising</text>
+<rect class="d-box" x="546" y="150" width="150" height="56" rx="9"/><text class="d-t" x="621" y="174" text-anchor="middle">admin panel</text><text class="d-s" x="621" y="192" text-anchor="middle">URL placed in href</text>
+<line class="d-edge" x1="178" y1="178" x2="283" y2="178" marker-end="url(#aux)"/><text class="d-s" x="230" y="170" text-anchor="middle">3 · send URL</text>
+<line class="d-edge" x1="455" y1="178" x2="544" y2="178" marker-end="url(#aux)"/><text class="d-s" x="500" y="170" text-anchor="middle">4 · reflect</text>
+<rect class="d-chip-no" x="180" y="234" width="360" height="26" rx="5"/><text class="d-chip-nt" x="360" y="251" text-anchor="middle">"&gt;&lt;img src=x onerror=alert()&gt;</text>
+<text class="d-no" x="360" y="288" text-anchor="middle">✕ attacker-set URL rendered in href, unsanitised → XSS in admin session</text>
+</svg>
+<figcaption><b>Fig. 02</b> — the upload data flow. The guest controls the file URL the cloud service returns; the server stores it and the admin panel renders it inside an <code>href</code> without sanitising, so a crafted URL executes as script in the admin's session.</figcaption>
+</figure>`;
+
 function injectFigures(html) {
   return html.replace(/<p>\s*\[\[([a-z0-9-]+)\]\]\s*<\/p>/g, (_m, key) => FIGURES[key] || '');
 }
