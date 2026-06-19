@@ -41,7 +41,7 @@ const personLd = {
 <BaseLayout jsonLd={personLd}>
   <div class="doc">
     <!-- TITLE BLOCK -->
-    <section class="doc-hero" data-reveal>
+    <section class="doc-hero">
       <div>
         <p class="dh-kicker">Dossier <b>001</b> · Subject Profile · Classification: <b>Open Source</b></p>
         <h1 class="dh-name"><span class="grad" data-scramble>Ibrahim Radi</span></h1>
@@ -60,7 +60,7 @@ const personLd = {
     </section>
 
     <!-- IDENTIFIERS -->
-    <section class="dsec" data-reveal>
+    <section class="dsec">
       <div class="dsec-head">
         <span class="dsec-no">§01</span><span class="dsec-title">Identifiers</span>
         <span class="dsec-meta">verified</span>
@@ -76,14 +76,14 @@ const personLd = {
     </section>
 
     <!-- FINDINGS -->
-    <section class="dsec" data-reveal>
+    <section class="dsec">
       <div class="dsec-head">
         <span class="dsec-no">§02</span><span class="dsec-title">Intelligence Findings</span>
         <span class="dsec-meta">{findings.length} logged</span>
       </div>
       <div class="findings">
         {findings.map((f) => (
-          <article class={`finding ${f.sev}`} id={`finding-${f.n}`} data-reveal>
+          <article class={`finding ${f.sev}`} id={`finding-${f.n}`}>
             <div class="finding-top">
               <span class="finding-id">FINDING-{String(f.n).padStart(3, '0')}</span>
               <span class={`sev ${f.sev}`}>{f.sev === 'crit' ? 'critical' : f.sev}</span>
