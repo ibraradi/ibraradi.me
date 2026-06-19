@@ -1187,6 +1187,7 @@ section {
 :root {
   --sev-crit: #ff6b81;
   --sev-high: #f4b740;
+  --sev-med: #ff9f43;
   --sev-info: var(--accent-2);
   --paper: #0d131d;
 }
@@ -1285,12 +1286,14 @@ section {
 .finding:hover { transform: translateX(3px); }
 .finding.crit { border-left-color: var(--sev-crit); }
 .finding.high { border-left-color: var(--sev-high); }
+.finding.medium { border-left-color: var(--sev-med); }
 .finding.info { border-left-color: var(--sev-info); }
 .finding-top { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
 .finding-id { font-family: var(--mono); font-size: 0.74rem; color: var(--muted-dim); }
 .sev { font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; border: 1px solid currentColor; }
 .sev.crit { color: var(--sev-crit); }
 .sev.high { color: var(--sev-high); }
+.sev.medium { color: var(--sev-med); }
 .sev.info { color: var(--sev-info); }
 .finding-period { margin-left: auto; font-family: var(--mono); font-size: 0.74rem; color: var(--muted-dim); }
 .finding-title { font-size: 1.12rem; font-weight: 700; color: var(--text-strong); margin: 12px 0 2px; }

@@ -4,7 +4,7 @@ import { SITE, SOCIALS, BLOG_ENABLED, EXPERIENCE, SKILLS, AWARDS, EDUCATION, CER
 import { getPosts } from '../lib/storyblok';
 
 // Severity ranking for findings (most impactful first).
-const SEV = ['crit', 'high', 'info', 'info'];
+const SEV = ['crit', 'high', 'medium', 'info'];
 const findings = EXPERIENCE.map((xp, i) => ({ ...xp, sev: SEV[i] ?? 'info', n: i + 1 }));
 
 // Recent field notes (blog) — newest few, shown only if the blog has posts.
