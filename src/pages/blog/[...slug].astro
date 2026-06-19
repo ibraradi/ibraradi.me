@@ -16,7 +16,22 @@ const html = data?.html ?? '';
 
 const dateFmt = (d: string) =>
   d ? new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
+const dateShort = (d: string) =>
+  d ? new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
 const isoDate = data?.date ? new Date(data.date).toISOString() : undefined;
+
+// Recommended reading: rank other posts by shared tags, then recency.
+const all = await getPosts();
+const related = data
+  ? all
+      .filter((p) => p.slug !== data.slug)
+      .map((p) => ({ p, score: p.tags.filter((t) => data.tags.includes(t)).length }))
+      .sort((a, b) => b.score - a.score || +new Date(b.p.date) - +new Date(a.p.date))
+      .slice(0, 3)
+      .map((x) => x.p)
+  : [];
+
+const ogImage = data ? `${SITE.url}/og/${data.slug}.png` : `${SITE.url}/og.png`;
 
 const articleLd = data && {
   '@context': 'https://schema.org',
@@ -24,12 +39,25 @@ const articleLd = data && {
   headline: data.title,
   description: data.excerpt,
   datePublished: isoDate,
-  image: `${SITE.url}/og.png`,
+  dateModified: isoDate,
+  image: ogImage,
   keywords: data.tags.join(', '),
   author: { '@type': 'Person', name: SITE.name, url: SITE.url },
   publisher: { '@type': 'Person', name: SITE.name, url: SITE.url },
   mainEntityOfPage: `${SITE.url}/blog/${data.slug}/`,
 };
+
+const breadcrumbLd = data && {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE.url}/` },
+    { '@type': 'ListItem', position: 2, name: 'Field Notes', item: `${SITE.url}/blog/` },
+    { '@type': 'ListItem', position: 3, name: data.title, item: `${SITE.url}/blog/${data.slug}/` },
+  ],
+};
+
+const ld = [articleLd, breadcrumbLd].filter(Boolean) as Record<string, unknown>[];
 ---
 
 <BaseLayout
@@ -39,7 +67,7 @@ const articleLd = data && {
   ogType="article"
   image={data ? `/og/${data.slug}.png` : undefined}
   publishedTime={isoDate}
-  jsonLd={articleLd || undefined}
+  jsonLd={ld.length ? ld : undefined}
 >
   <div class="doc post-shell">
     <article class="article post-article">
@@ -52,6 +80,21 @@ const articleLd = data && {
         <h1>{data?.title}</h1>
       </header>
       <div class="article-body" set:html={html}></div>
+
+      {related.length > 0 && (
+        <nav class="related" aria-label="Recommended reading">
+          <div class="related-head">// recommended reading</div>
+          <div class="notes-mini">
+            {related.map((p) => (
+              <a class="note-mini" href={`/blog/${p.slug}/`}>
+                <time datetime={p.date}>{dateShort(p.date)}</time>
+                <span class="nm-title">{p.title}</span>
+                <span class="nm-go">→</span>
+              </a>
+            ))}
+          </div>
+        </nav>
+      )}
     </article>
 
     {data && data.toc.length > 1 && (

@@ -1663,6 +1663,10 @@ a.co:hover { text-decoration: underline; }
 .note-mini:hover .nm-title { color: var(--accent); }
 .note-mini .nm-go { font-family: var(--mono); font-size: 0.74rem; color: var(--accent); }
 .notes-all { display: inline-block; margin-top: 14px; font-family: var(--mono); font-size: 0.8rem; color: var(--accent); }
+
+/* recommended reading at the end of a post */
+.related { margin-top: 52px; padding-top: 28px; border-top: 1px solid var(--border); }
+.related-head { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted-dim); margin-bottom: 12px; }
 /* keep long links/headers from forcing horizontal scroll */
 .article-body a { overflow-wrap: break-word; }
 .dsec-head { flex-wrap: wrap; }
