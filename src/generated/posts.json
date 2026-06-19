@@ -130,7 +130,7 @@
     "slug": "cross-subdomain-jwt-account-takeover",
     "fullSlug": "blog/cross-subdomain-jwt-account-takeover",
     "title": "Cross-subdomain JWT account takeover: from email reuse to full org compromise",
-    "date": "2025-02-12 00:00",
+    "date": "2024-03-05 00:00",
     "excerpt": "A red-team case study: weak JWT validation (keyed on email), no email verification, and a spoofable Source header let one token cross tenants and escalate to full admin across a multi-tenant SaaS.",
     "tags": [
       "jwt",
@@ -183,7 +183,7 @@
     "slug": "automated-discovery-to-manual-exploitation",
     "fullSlug": "blog/automated-discovery-to-manual-exploitation",
     "title": "From automated discovery to manual exploitation: PII leak to XSS in an appointment system",
-    "date": "2024-04-10 00:00",
+    "date": "2023-06-14 00:00",
     "excerpt": "Wayback recon surfaced an appointment platform that carried session tokens in GET parameters and leaked PII in archived URLs. From there: a space-free XSS in the phone field a prior hunter missed, and a stored XSS through a file-upload URL reflected unsanitised into the admin panel.",
     "tags": [
       "recon",
@@ -229,7 +229,7 @@
     "slug": "xss-in-soql-console",
     "fullSlug": "blog/xss-in-soql-console",
     "title": "Stored XSS in a SOQL query console",
-    "date": "2023-05-20 00:00",
+    "date": "2023-05-18 00:00",
     "excerpt": "A management dashboard let admins run SOQL queries and rendered the results as HTML. By seeding XSS into user records on the managed site and hitting the raw QueryConsole endpoint, which returned HTML instead of JSON, the payload fired in any console user's browser.",
     "tags": [
       "xss",
@@ -263,7 +263,7 @@
     "slug": "free-to-paid-response-manipulation",
     "fullSlug": "blog/free-to-paid-response-manipulation",
     "title": "Upgrade Free to Paid by rewriting the response",
-    "date": "2023-03-05 00:00",
+    "date": "2023-03-03 00:00",
     "excerpt": "A hosting product gated its paid themes and features entirely in the client. By diffing a free response against a paid one and rewriting the bytes the browser trusts, a free account got the full paid experience, then I packaged it as a browser extension.",
     "tags": [
       "response-manipulation",
@@ -308,7 +308,7 @@
     "slug": "ml-model-pickle-rce",
     "fullSlug": "blog/ml-model-pickle-rce",
     "title": "Weaponising a shared ML model: RCE via pickle deserialization",
-    "date": "2023-02-10 00:00",
+    "date": "2022-08-20 00:00",
     "excerpt": "Loading a shared model file can be remote code execution, because Python's pickle format is not data, it is a program. A crafted phishing-detection model runs the attacker's command the moment an engineer calls pickle.load().",
     "tags": [
       "pickle",
