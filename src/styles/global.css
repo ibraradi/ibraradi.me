@@ -1320,7 +1320,7 @@ a.co:hover { text-decoration: underline; }
 .rec-text { color: var(--text); font-size: 0.94rem; }
 
 /* credentials */
-.creds { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; }
+.creds { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; }
 .cred { flex: 1 1 280px; border: 1px solid var(--border); border-radius: 10px; background: var(--paper); padding: 16px; }
 .cred-k { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted-dim); margin-bottom: 10px; }
 .cred-main { color: var(--text-strong); font-weight: 600; font-size: 0.96rem; }

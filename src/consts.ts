@@ -137,7 +137,13 @@ export const AWARDS = [
 ] as const;
 
 export const CERTIFICATES = [
-  { name: 'AWS Certified Cloud Practitioner', issuer: 'Amazon Web Services' },
+  {
+    name: 'AWS Certified Cloud Practitioner',
+    issuer: 'Amazon Web Services',
+    issued: 'Aug 2023',
+    expires: 'Aug 2026',
+    credentialId: 'JMBJSK7C9BB41G5M',
+  },
 ] as const;
 
 export const TALKS = [
