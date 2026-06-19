@@ -241,6 +241,27 @@ FIGURES['fig-attachment-takeover'] = `<figure class="diagram">
 <figcaption><b>Fig. 01</b> — the attachment fetcher accepted a bare local path instead of a URL, turning an email feature into a server-side file read. Reading <code>/proc/self/environ</code> returned the process environment and its secrets straight into the attacker's inbox.</figcaption>
 </figure>`;
 
+FIGURES['fig-pickle-rce'] = `<figure class="diagram">
+<svg viewBox="0 0 720 320" role="img" aria-label="Remote code execution through an untrusted pickle model file">
+<defs><marker id="apk" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="d-arrow"/></marker></defs>
+<text class="d-lane" x="14" y="24">ML SUPPLY CHAIN · pickle.load() ON AN UNTRUSTED MODEL = RCE</text>
+<rect class="d-box-a" x="20" y="44" width="170" height="60" rx="9"/><text class="d-t" x="105" y="70" text-anchor="middle">attacker</text><text class="d-s" x="105" y="88" text-anchor="middle">crafts a malicious pickle</text>
+<rect class="d-box" x="275" y="44" width="170" height="60" rx="9"/><text class="d-t" x="360" y="70" text-anchor="middle">shared model file</text><text class="d-s" x="360" y="88" text-anchor="middle">vector.pickel · model.sav</text>
+<rect class="d-box" x="530" y="44" width="170" height="60" rx="9"/><text class="d-t" x="615" y="70" text-anchor="middle">ML engineer</text><text class="d-s" x="615" y="88" text-anchor="middle">pickle.load(file)</text>
+<line class="d-edge" x1="190" y1="74" x2="273" y2="74" marker-end="url(#apk)"/><text class="d-s" x="231" y="66" text-anchor="middle">embed</text>
+<line class="d-edge" x1="445" y1="74" x2="528" y2="74" marker-end="url(#apk)"/><text class="d-s" x="486" y="66" text-anchor="middle">share</text>
+<line class="d-edge-dim" x1="615" y1="104" x2="615" y2="150" marker-end="url(#apk)"/>
+<rect class="d-box" x="500" y="152" width="200" height="58" rx="9"/><text class="d-t" x="600" y="176" text-anchor="middle">__reduce__ fires</text><text class="d-s" x="600" y="194" text-anchor="middle">during unpickling</text>
+<line class="d-edge" x1="500" y1="181" x2="372" y2="181" marker-end="url(#apk)"/>
+<rect class="d-chip-no" x="180" y="168" width="190" height="26" rx="5"/><text class="d-chip-nt" x="275" y="185" text-anchor="middle">os.system(cmd)</text>
+<line class="d-edge" x1="275" y1="194" x2="275" y2="238" marker-end="url(#apk)"/>
+<rect class="d-box-a" x="150" y="240" width="250" height="56" rx="9"/><text class="d-t" x="275" y="264" text-anchor="middle">shell as the loader</text><text class="d-s" x="275" y="282" text-anchor="middle">user · root under sudo</text>
+<text class="d-no" x="500" y="262" text-anchor="middle">✕ unpickling runs code,</text>
+<text class="d-no" x="500" y="282" text-anchor="middle">the data file is the program</text>
+</svg>
+<figcaption><b>Fig. 01</b> — pickle is not just data. A crafted model file defines <code>__reduce__</code>, so the moment the engineer calls <code>pickle.load()</code> the attacker's <code>os.system(cmd)</code> runs with that process's privileges.</figcaption>
+</figure>`;
+
 function injectFigures(html) {
   return html.replace(/<p>\s*\[\[([a-z0-9-]+)\]\]\s*<\/p>/g, (_m, key) => FIGURES[key] || '');
 }
