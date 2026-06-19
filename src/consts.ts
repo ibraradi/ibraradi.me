@@ -43,6 +43,7 @@ export const STATS = [
 export type Experience = {
   role: string;
   company: string;
+  url?: string;
   location: string;
   period: string;
   summary?: string;
@@ -54,6 +55,7 @@ export const EXPERIENCE: Experience[] = [
   {
     role: 'Co-Founder',
     company: 'Flawtrack',
+    url: 'https://flawtrack.com',
     location: 'Kuala Lumpur, MY',
     period: 'Jun 2023 — Present',
     summary:
@@ -70,6 +72,7 @@ export const EXPERIENCE: Experience[] = [
   {
     role: 'Security Engineer',
     company: 'DeepStrike',
+    url: 'https://deepstrike.io',
     location: 'Dubai, UAE',
     period: 'Jan 2022 — Aug 2023',
     points: [
@@ -137,6 +140,15 @@ export const CERTIFICATES = [
   { name: 'AWS Certified Cloud Practitioner', issuer: 'Amazon Web Services' },
 ] as const;
 
+export const TALKS = [
+  {
+    title: 'Cybersecurity',
+    event: 'CAT Reloaded',
+    youtube: '9P4AMq9aO3Y',
+    url: 'https://www.youtube.com/watch?v=9P4AMq9aO3Y',
+  },
+] as const;
+
 export const EDUCATION = [
   {
     school: 'Mansoura University',
@@ -149,6 +161,7 @@ export const EDUCATION = [
 export const VOLUNTEERING = [
   {
     org: 'CAT Reloaded',
+    url: 'https://catreloaded.org',
     role: 'Cyber Security Head & Instructor',
     points: [
       'Instructed students and managed department operations for a prominent university organization.',

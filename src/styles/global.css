@@ -1298,6 +1298,8 @@ section {
 .finding-period { margin-left: auto; font-family: var(--mono); font-size: 0.74rem; color: var(--muted-dim); }
 .finding-title { font-size: 1.12rem; font-weight: 700; color: var(--text-strong); margin: 12px 0 2px; }
 .finding-title .co { color: var(--accent); }
+a.co { text-decoration: none; }
+a.co:hover { text-decoration: underline; }
 .finding-sum { color: var(--text); margin-top: 10px; font-size: 0.94rem; }
 .finding ul { list-style: none; margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
 .finding li { position: relative; padding-left: 20px; color: var(--text); font-size: 0.92rem; }
@@ -1318,11 +1320,23 @@ section {
 .rec-text { color: var(--text); font-size: 0.94rem; }
 
 /* credentials */
-.creds { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.cred { border: 1px solid var(--border); border-radius: 10px; background: var(--paper); padding: 16px; }
+.creds { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; }
+.cred { flex: 1 1 280px; border: 1px solid var(--border); border-radius: 10px; background: var(--paper); padding: 16px; }
 .cred-k { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted-dim); margin-bottom: 10px; }
 .cred-main { color: var(--text-strong); font-weight: 600; font-size: 0.96rem; }
 .cred-sub { color: var(--muted); font-size: 0.84rem; margin-top: 4px; }
+.cred-sub a { color: var(--accent); text-decoration: none; }
+.cred-sub a:hover { text-decoration: underline; }
+
+/* talks */
+.talks { display: flex; flex-direction: column; gap: 20px; }
+.talk { margin: 0; }
+.talk-embed { position: relative; aspect-ratio: 16 / 9; max-width: 760px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--paper); }
+.talk-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.talk-cap { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; margin-top: 10px; font-family: var(--mono); font-size: 0.84rem; }
+.talk-cap a { color: var(--text-strong); text-decoration: none; }
+.talk-cap a:hover { color: var(--accent); }
+.talk-host { color: var(--muted-dim); }
 .cred ul { list-style: none; margin-top: 8px; display: flex; flex-direction: column; gap: 6px; }
 .cred li { color: var(--text); font-size: 0.86rem; padding-left: 14px; position: relative; }
 .cred li::before { content: '·'; position: absolute; left: 2px; color: var(--accent); }

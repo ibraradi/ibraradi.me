@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { SITE, SOCIALS, BLOG_ENABLED, EXPERIENCE, SKILLS, AWARDS, EDUCATION, CERTIFICATES, VOLUNTEERING } from '../consts';
+import { SITE, SOCIALS, BLOG_ENABLED, EXPERIENCE, SKILLS, AWARDS, EDUCATION, CERTIFICATES, VOLUNTEERING, TALKS } from '../consts';
 import { getPosts } from '../lib/storyblok';
 
 // Severity ranking for findings (most impactful first).
@@ -89,7 +89,9 @@ const personLd = {
               <span class={`sev ${f.sev}`}>{f.sev === 'crit' ? 'critical' : f.sev}</span>
               <span class="finding-period">{f.period} · {f.location}</span>
             </div>
-            <h3 class="finding-title">{f.role} <span class="c-muted">@</span> <span class="co">{f.company}</span></h3>
+            <h3 class="finding-title">{f.role} <span class="c-muted">@</span> {f.url
+              ? <a class="co" href={f.url} target="_blank" rel="noopener noreferrer">{f.company}</a>
+              : <span class="co">{f.company}</span>}</h3>
             {f.summary && <p class="finding-sum">{f.summary}</p>}
             <ul>
               {f.points.map((p) => <li>{p}</li>)}
@@ -132,7 +134,7 @@ const personLd = {
     <section class="dsec" id="credentials" data-reveal>
       <div class="dsec-head">
         <span class="dsec-no">§05</span><span class="dsec-title">Verified Credentials</span>
-        <span class="dsec-meta">education · certs · service</span>
+        <span class="dsec-meta">education · certifications</span>
       </div>
       <div class="creds">
         {EDUCATION.map((e) => (
@@ -150,13 +152,53 @@ const personLd = {
             <div class="cred-sub">{c.issuer}</div>
           </div>
         ))}
+      </div>
+    </section>
+
+    <!-- VOLUNTEERING -->
+    <section class="dsec" data-reveal>
+      <div class="dsec-head">
+        <span class="dsec-no">§06</span><span class="dsec-title">Volunteering</span>
+        <span class="dsec-meta">community</span>
+      </div>
+      <div class="creds">
         {VOLUNTEERING.map((v) => (
           <div class="cred">
             <div class="cred-k">Service</div>
             <div class="cred-main">{v.role}</div>
-            <div class="cred-sub">{v.org}</div>
+            <div class="cred-sub">{v.url
+              ? <a href={v.url} target="_blank" rel="noopener noreferrer">{v.org}</a>
+              : v.org}</div>
             <ul>{v.points.map((p) => <li>{p}</li>)}</ul>
           </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- TALKS -->
+    <section class="dsec" data-reveal>
+      <div class="dsec-head">
+        <span class="dsec-no">§07</span><span class="dsec-title">Talks</span>
+        <span class="dsec-meta">{TALKS.length} on record</span>
+      </div>
+      <div class="talks">
+        {TALKS.map((t) => (
+          <figure class="talk">
+            <div class="talk-embed">
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${t.youtube}`}
+                title={t.title}
+                loading="lazy"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+              ></iframe>
+            </div>
+            <figcaption class="talk-cap">
+              <a href={t.url} target="_blank" rel="noopener noreferrer">{t.title}</a>
+              <span class="talk-host">{t.event}</span>
+            </figcaption>
+          </figure>
         ))}
       </div>
     </section>
@@ -165,7 +207,7 @@ const personLd = {
     {BLOG_ENABLED && (
       <section class="dsec" data-reveal>
         <div class="dsec-head">
-          <span class="dsec-no">§06</span><span class="dsec-title">Field Notes</span>
+          <span class="dsec-no">§08</span><span class="dsec-title">Field Notes</span>
           <span class="dsec-meta">{recentPosts.length} recent</span>
         </div>
         {recentPosts.length === 0 ? (
@@ -188,7 +230,7 @@ const personLd = {
     <!-- COMMS -->
     <section class="dsec" data-reveal>
       <div class="dsec-head">
-        <span class="dsec-no">§07</span><span class="dsec-title">Establish Comms</span>
+        <span class="dsec-no">§09</span><span class="dsec-title">Establish Comms</span>
         <span class="dsec-meta">channels open</span>
       </div>
       <div class="dcomms">
