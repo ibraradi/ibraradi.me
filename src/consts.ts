@@ -160,7 +160,7 @@ export const EDUCATION = [
     school: 'Mansoura University',
     program: 'Faculty of Computer & Information Sciences',
     period: '2021 — 2025',
-    note: 'Grade: A',
+    note: 'Grade: Excellent with Honors',
   },
 ] as const;
 
