@@ -101,10 +101,30 @@ const personLd = {
       </div>
     </section>
 
+    <!-- VOLUNTEERING -->
+    <section class="dsec" data-reveal>
+      <div class="dsec-head">
+        <span class="dsec-no">§03</span><span class="dsec-title">Volunteering</span>
+        <span class="dsec-meta">community</span>
+      </div>
+      <div class="creds">
+        {VOLUNTEERING.map((v) => (
+          <div class="cred">
+            <div class="cred-k">Service</div>
+            <div class="cred-main">{v.role}</div>
+            <div class="cred-sub">{v.url
+              ? <a href={v.url} target="_blank" rel="noopener noreferrer">{v.org}</a>
+              : v.org}</div>
+            <ul>{v.points.map((p) => <li>{p}</li>)}</ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
     <!-- CAPABILITY MATRIX -->
     <section class="dsec" data-reveal>
       <div class="dsec-head">
-        <span class="dsec-no">§03</span><span class="dsec-title">Capability Matrix</span>
+        <span class="dsec-no">§04</span><span class="dsec-title">Capability Matrix</span>
         <span class="dsec-meta">{SKILLS.length} domains</span>
       </div>
       <div class="matrix">
@@ -120,7 +140,7 @@ const personLd = {
     <!-- FIELD RECORD -->
     <section class="dsec" data-reveal>
       <div class="dsec-head">
-        <span class="dsec-no">§04</span><span class="dsec-title">Field Record</span>
+        <span class="dsec-no">§05</span><span class="dsec-title">Field Record</span>
         <span class="dsec-meta">ctf &amp; competitions</span>
       </div>
       <div class="record">
@@ -133,7 +153,7 @@ const personLd = {
     <!-- CREDENTIALS -->
     <section class="dsec" id="credentials" data-reveal>
       <div class="dsec-head">
-        <span class="dsec-no">§05</span><span class="dsec-title">Verified Credentials</span>
+        <span class="dsec-no">§06</span><span class="dsec-title">Verified Credentials</span>
         <span class="dsec-meta">education · certifications</span>
       </div>
       <div class="creds">
@@ -150,26 +170,6 @@ const personLd = {
             <div class="cred-k">Certification</div>
             <div class="cred-main">{c.name}</div>
             <div class="cred-sub">{c.issuer}</div>
-          </div>
-        ))}
-      </div>
-    </section>
-
-    <!-- VOLUNTEERING -->
-    <section class="dsec" data-reveal>
-      <div class="dsec-head">
-        <span class="dsec-no">§06</span><span class="dsec-title">Volunteering</span>
-        <span class="dsec-meta">community</span>
-      </div>
-      <div class="creds">
-        {VOLUNTEERING.map((v) => (
-          <div class="cred">
-            <div class="cred-k">Service</div>
-            <div class="cred-main">{v.role}</div>
-            <div class="cred-sub">{v.url
-              ? <a href={v.url} target="_blank" rel="noopener noreferrer">{v.org}</a>
-              : v.org}</div>
-            <ul>{v.points.map((p) => <li>{p}</li>)}</ul>
           </div>
         ))}
       </div>
