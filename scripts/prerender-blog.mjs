@@ -216,6 +216,31 @@ FIGURES['fig-upload-xss'] = `<figure class="diagram">
 <figcaption><b>Fig. 02</b> — the upload data flow. The guest controls the file URL the cloud service returns; the server stores it and the admin panel renders it inside an <code>href</code> without sanitising, so a crafted URL executes as script in the admin's session.</figcaption>
 </figure>`;
 
+FIGURES['fig-attachment-takeover'] = `<figure class="diagram">
+<svg viewBox="0 0 720 330" role="img" aria-label="Infrastructure takeover via insecure attachment handling">
+<defs><marker id="aat" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="d-arrow"/></marker></defs>
+<text class="d-lane" x="14" y="24">ATTACHMENT FETCHER · NATIVE RUBY · ON AWS · SERVER-SIDE</text>
+<rect class="d-box-a" x="20" y="44" width="150" height="58" rx="9"/><text class="d-t" x="95" y="70" text-anchor="middle">attacker</text><text class="d-s" x="95" y="88" text-anchor="middle">sends an email</text>
+<rect class="d-box" x="266" y="44" width="188" height="58" rx="9"/><text class="d-t" x="360" y="68" text-anchor="middle">email + attachment API</text><text class="d-s" x="360" y="86" text-anchor="middle">fetches attachment URL server-side</text>
+<rect class="d-box-a" x="550" y="44" width="150" height="58" rx="9"/><text class="d-t" x="625" y="68" text-anchor="middle">attacker inbox</text><text class="d-s" x="625" y="86" text-anchor="middle">receives the file</text>
+<line class="d-edge" x1="170" y1="73" x2="264" y2="73" marker-end="url(#aat)"/>
+<line class="d-edge" x1="454" y1="73" x2="548" y2="73" marker-end="url(#aat)"/>
+<text class="d-s" x="217" y="116" text-anchor="middle">attachment.url</text>
+<text class="d-s" x="501" y="116" text-anchor="middle">file content</text>
+<text class="d-lane" x="14" y="156">PROBES</text>
+<rect class="d-chip-no" x="20" y="168" width="332" height="24" rx="5"/><text class="d-chip-nt" x="186" y="184" text-anchor="middle">http://169.254.169.254/  ·  file://  ·  blocked by WAF</text>
+<rect class="d-chip" x="368" y="168" width="332" height="24" rx="5"/><text class="d-chip-t" x="534" y="184" text-anchor="middle">/proc/self/environ  ·  bare path, no protocol  ·  read</text>
+<text class="d-lane" x="14" y="224">EXFILTRATED FROM /proc/self/environ</text>
+<rect class="d-chip" x="20" y="236" width="178" height="24" rx="5"/><text class="d-chip-t" x="109" y="252" text-anchor="middle">AWS_SECRET_ACCESS_KEY</text>
+<rect class="d-chip" x="210" y="236" width="118" height="24" rx="5"/><text class="d-chip-t" x="269" y="252" text-anchor="middle">DATABASE_URL</text>
+<rect class="d-chip" x="340" y="236" width="150" height="24" rx="5"/><text class="d-chip-t" x="415" y="252" text-anchor="middle">Twilio · Stripe</text>
+<rect class="d-chip" x="502" y="236" width="100" height="24" rx="5"/><text class="d-chip-t" x="552" y="252" text-anchor="middle">SendGrid</text>
+<rect class="d-chip" x="614" y="236" width="86" height="24" rx="5"/><text class="d-chip-t" x="657" y="252" text-anchor="middle">RSA key</text>
+<text class="d-no" x="360" y="296" text-anchor="middle">✕ a URL fetcher that resolves local paths is a file read — and the file body is the secrets store</text>
+</svg>
+<figcaption><b>Fig. 01</b> — the attachment fetcher accepted a bare local path instead of a URL, turning an email feature into a server-side file read. Reading <code>/proc/self/environ</code> returned the process environment and its secrets straight into the attacker's inbox.</figcaption>
+</figure>`;
+
 function injectFigures(html) {
   return html.replace(/<p>\s*\[\[([a-z0-9-]+)\]\]\s*<\/p>/g, (_m, key) => FIGURES[key] || '');
 }

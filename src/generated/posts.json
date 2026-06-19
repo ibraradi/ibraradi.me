@@ -77,6 +77,56 @@
     ]
   },
   {
+    "slug": "attachment-handling-lfi-ssrf-takeover",
+    "fullSlug": "blog/attachment-handling-lfi-ssrf-takeover",
+    "title": "Infrastructure takeover through insecure attachment handling (LFI & SSRF)",
+    "date": "2026-05-17 00:00",
+    "excerpt": "An email feature fetched attachments by URL, but it also resolved a bare local path. No protocol, no metadata trick, just a filename: reading /proc/self/environ returned the process environment and its secrets (AWS, Twilio, SendGrid, Stripe, DB strings) straight into my inbox.",
+    "tags": [
+      "lfi",
+      "ssrf",
+      "file-read",
+      "aws",
+      "waf-bypass",
+      "bug-bounty"
+    ],
+    "html": "<p>A short note rather than a full write-up: a recent finding I think is worth sharing, mostly because of where the lesson actually was.</p>\n<p>The target had a feature that lets you send emails and attach files to them. Normally the attachment is uploaded to cloud storage (think S3), and the request carries the object&#39;s URL; the server fetches that URL and delivers the content inside the email.</p>\n<h2 id=\"1-the-first-signal\">1. The first signal</h2>\n<p>I dropped a Burp Collaborator URL into the attachment field. A request came back to my Collaborator, and the source IP was clearly AWS. The detail that made me stop and spend real time here: the User-Agent was native <strong>Ruby</strong>, not a browser or a generic HTTP client. That is a server-side fetch whose target I control, which is exactly the shape of an SSRF.</p>\n<h2 id=\"2-what-did-not-work\">2. What did not work</h2>\n<p>I ran the usual playbook against the fetcher:</p>\n<ul>\n<li>AWS metadata at <code>http://169.254.169.254/...</code></li>\n<li>the <code>file://</code> protocol</li>\n<li>the other common LFI and SSRF tricks</li>\n</ul>\n<p>None of it landed. There was a Cloudflare WAF in front that ate most of the obvious payloads.</p>\n<h2 id=\"3-what-did-work\">3. What did work</h2>\n<p>The thing that finally worked was almost boring: I dropped the protocol entirely and gave it a <strong>bare file name / path</strong>, no <code>file://</code>, no scheme at all. The fetcher resolved it as a local path and the file&#39;s contents came back in the email.</p>\n<p>So the attachment fetcher was happy to read local files, not just remote URLs. That quietly turns an email feature into a server-side file read.</p>\n<figure class=\"diagram\">\n<svg viewBox=\"0 0 720 330\" role=\"img\" aria-label=\"Infrastructure takeover via insecure attachment handling\">\n<defs><marker id=\"aat\" markerWidth=\"9\" markerHeight=\"9\" refX=\"6.5\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L7,3 L0,6 Z\" class=\"d-arrow\"/></marker></defs>\n<text class=\"d-lane\" x=\"14\" y=\"24\">ATTACHMENT FETCHER · NATIVE RUBY · ON AWS · SERVER-SIDE</text>\n<rect class=\"d-box-a\" x=\"20\" y=\"44\" width=\"150\" height=\"58\" rx=\"9\"/><text class=\"d-t\" x=\"95\" y=\"70\" text-anchor=\"middle\">attacker</text><text class=\"d-s\" x=\"95\" y=\"88\" text-anchor=\"middle\">sends an email</text>\n<rect class=\"d-box\" x=\"266\" y=\"44\" width=\"188\" height=\"58\" rx=\"9\"/><text class=\"d-t\" x=\"360\" y=\"68\" text-anchor=\"middle\">email + attachment API</text><text class=\"d-s\" x=\"360\" y=\"86\" text-anchor=\"middle\">fetches attachment URL server-side</text>\n<rect class=\"d-box-a\" x=\"550\" y=\"44\" width=\"150\" height=\"58\" rx=\"9\"/><text class=\"d-t\" x=\"625\" y=\"68\" text-anchor=\"middle\">attacker inbox</text><text class=\"d-s\" x=\"625\" y=\"86\" text-anchor=\"middle\">receives the file</text>\n<line class=\"d-edge\" x1=\"170\" y1=\"73\" x2=\"264\" y2=\"73\" marker-end=\"url(#aat)\"/>\n<line class=\"d-edge\" x1=\"454\" y1=\"73\" x2=\"548\" y2=\"73\" marker-end=\"url(#aat)\"/>\n<text class=\"d-s\" x=\"217\" y=\"116\" text-anchor=\"middle\">attachment.url</text>\n<text class=\"d-s\" x=\"501\" y=\"116\" text-anchor=\"middle\">file content</text>\n<text class=\"d-lane\" x=\"14\" y=\"156\">PROBES</text>\n<rect class=\"d-chip-no\" x=\"20\" y=\"168\" width=\"332\" height=\"24\" rx=\"5\"/><text class=\"d-chip-nt\" x=\"186\" y=\"184\" text-anchor=\"middle\">http://169.254.169.254/  ·  file://  ·  blocked by WAF</text>\n<rect class=\"d-chip\" x=\"368\" y=\"168\" width=\"332\" height=\"24\" rx=\"5\"/><text class=\"d-chip-t\" x=\"534\" y=\"184\" text-anchor=\"middle\">/proc/self/environ  ·  bare path, no protocol  ·  read</text>\n<text class=\"d-lane\" x=\"14\" y=\"224\">EXFILTRATED FROM /proc/self/environ</text>\n<rect class=\"d-chip\" x=\"20\" y=\"236\" width=\"178\" height=\"24\" rx=\"5\"/><text class=\"d-chip-t\" x=\"109\" y=\"252\" text-anchor=\"middle\">AWS_SECRET_ACCESS_KEY</text>\n<rect class=\"d-chip\" x=\"210\" y=\"236\" width=\"118\" height=\"24\" rx=\"5\"/><text class=\"d-chip-t\" x=\"269\" y=\"252\" text-anchor=\"middle\">DATABASE_URL</text>\n<rect class=\"d-chip\" x=\"340\" y=\"236\" width=\"150\" height=\"24\" rx=\"5\"/><text class=\"d-chip-t\" x=\"415\" y=\"252\" text-anchor=\"middle\">Twilio · Stripe</text>\n<rect class=\"d-chip\" x=\"502\" y=\"236\" width=\"100\" height=\"24\" rx=\"5\"/><text class=\"d-chip-t\" x=\"552\" y=\"252\" text-anchor=\"middle\">SendGrid</text>\n<rect class=\"d-chip\" x=\"614\" y=\"236\" width=\"86\" height=\"24\" rx=\"5\"/><text class=\"d-chip-t\" x=\"657\" y=\"252\" text-anchor=\"middle\">RSA key</text>\n<text class=\"d-no\" x=\"360\" y=\"296\" text-anchor=\"middle\">✕ a URL fetcher that resolves local paths is a file read — and the file body is the secrets store</text>\n</svg>\n<figcaption><b>Fig. 01</b> — the attachment fetcher accepted a bare local path instead of a URL, turning an email feature into a server-side file read. Reading <code>/proc/self/environ</code> returned the process environment and its secrets straight into the attacker's inbox.</figcaption>\n</figure>\n<h2 id=\"4-escalating-to-the-real-loot\">4. Escalating to the real loot</h2>\n<p>The highest-impact read was the process environment, through:</p>\n<pre class=\"shiki tokyo-night\" style=\"background-color:#1a1b26;color:#a9b1d6\" tabindex=\"0\"><code><span class=\"line\"><span>/proc/self/environ</span></span></code></pre>\n<p>(equivalently <code>/proc/[pid]/environ</code>). This one slipped past the WAF where other payloads did not, and the environment of a running process is exactly where a modern app keeps its secrets.</p>\n<h2 id=\"5-the-cjk-encoding-detour\">5. The CJK encoding detour</h2>\n<p>The file arrived, but it rendered as Chinese, Japanese, and Korean (CJK) characters. The reason: <code>environ</code> separates its entries with <strong>null bytes</strong>, and somewhere in the mail pipeline that got mis-detected as a multi-byte encoding, so the null-separated bytes were reinterpreted as CJK code points. A small decode script put it back to readable <code>KEY=value</code> pairs.</p>\n<h2 id=\"6-impact\">6. Impact</h2>\n<p>The environment held the kind of keys that make this an infrastructure takeover rather than a single bug:</p>\n<ul>\n<li><code>AWS_SECRET_ACCESS_KEY</code></li>\n<li>Twilio, SendGrid, and Stripe API keys</li>\n<li>database connection strings</li>\n</ul>\n<p>With cloud credentials, mail / SMS / payment provider keys, and direct database access, the blast radius is the whole environment, not one application.</p>\n<h2 id=\"7-why-i-wrote-this\">7. Why I wrote this</h2>\n<p>When I started out, my problem was almost never the vulnerability class or the theory. Labs are clean and obvious: they tell you the bug is there and roughly where. The hard part was always the other question: <strong>how does this actually show up in a modern application?</strong> Finding the loose thread was the difficult part; everything after it was easy.</p>\n<p>That is the point of this note. The bug itself is textbook LFI/SSRF. The part worth keeping is the path to it: a Collaborator hit, a native-Ruby User-Agent that said &quot;server-side fetch,&quot; a WAF that swallowed the obvious payloads, and a protocol-less path that did not look like an exploit at all.</p>\n<h2 id=\"8-takeaways\">8. Takeaways</h2>\n<ul>\n<li><strong>A URL fetcher is an SSRF and LFI surface.</strong> Anything that turns user input into a server-side request deserves this attention, even a humble &quot;attach a file&quot; feature.</li>\n<li><strong>Strip the protocol.</strong> When <code>file://</code> and friends are filtered, a bare path can still resolve. WAFs pattern-match on schemes and keywords far more than on plain paths.</li>\n<li><strong><code>/proc/self/environ</code> is the prize.</strong> In containerised, env-var-driven apps it hands you the live secrets in a single read.</li>\n<li><strong>Mind the encoding.</strong> Null-byte-separated files can come back mangled (CJK here). Do not assume a &quot;garbage&quot; response is empty; decode it.</li>\n</ul>\n<p>Thanks for reading.</p>\n",
+    "toc": [
+      {
+        "id": "1-the-first-signal",
+        "text": "1. The first signal"
+      },
+      {
+        "id": "2-what-did-not-work",
+        "text": "2. What did not work"
+      },
+      {
+        "id": "3-what-did-work",
+        "text": "3. What did work"
+      },
+      {
+        "id": "4-escalating-to-the-real-loot",
+        "text": "4. Escalating to the real loot"
+      },
+      {
+        "id": "5-the-cjk-encoding-detour",
+        "text": "5. The CJK encoding detour"
+      },
+      {
+        "id": "6-impact",
+        "text": "6. Impact"
+      },
+      {
+        "id": "7-why-i-wrote-this",
+        "text": "7. Why I wrote this"
+      },
+      {
+        "id": "8-takeaways",
+        "text": "8. Takeaways"
+      }
+    ]
+  },
+  {
     "slug": "cross-subdomain-jwt-account-takeover",
     "fullSlug": "blog/cross-subdomain-jwt-account-takeover",
     "title": "Cross-subdomain JWT account takeover: from email reuse to full org compromise",
