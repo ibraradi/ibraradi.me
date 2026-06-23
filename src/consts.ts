@@ -6,10 +6,10 @@ export const BLOG_ENABLED = true;
 
 export const SITE = {
   name: 'Ibrahim Radi',
-  title: 'Ibrahim Radi — Security Engineer',
+  title: 'Ibrahim Radi · Security Engineer',
   tagline: 'Security Engineer & Co-Founder',
   description:
-    'Ibrahim Radi — Security Engineer and technical co-founder of Flawtrack. ' +
+    'Ibrahim Radi, Security Engineer and technical co-founder of Flawtrack. ' +
     'Attack Surface Management, threat intelligence, DevSecOps, penetration testing, and CTF.',
   url: 'https://ibraradi.me',
   location: 'Kuala Lumpur, Malaysia',
@@ -57,9 +57,9 @@ export const EXPERIENCE: Experience[] = [
     company: 'Flawtrack',
     url: 'https://flawtrack.com',
     location: 'Kuala Lumpur, MY',
-    period: 'Jun 2023 — Present',
+    period: 'Jun 2023 - Present',
     summary:
-      "As technical co-founder, I built and managed the platform's entire stack from initial code to production — the core Attack Surface Management (ASM), brand protection, and threat-intel engines, the DevSecOps pipelines, AI/RAG integrations, and the frontend dashboards that turn raw security logs into clear, visual data.",
+      "As technical co-founder, I built and managed the platform's entire stack from initial code to production: the core Attack Surface Management (ASM), brand protection, and threat-intel engines, the DevSecOps pipelines, AI/RAG integrations, and the frontend dashboards that turn raw security logs into clear, visual data.",
     points: [
       'Threat Intel: wrote data pipelines and parsers that collected and processed 2B+ stealer leaks.',
       'ASM Scaling: built a distributed scanning engine using hundreds of concurrent instances to map large infrastructures (7,000+ assets) in under 3 hours.',
@@ -74,7 +74,7 @@ export const EXPERIENCE: Experience[] = [
     company: 'DeepStrike',
     url: 'https://deepstrike.io',
     location: 'Dubai, UAE',
-    period: 'Jan 2022 — Aug 2023',
+    period: 'Jan 2022 - Aug 2023',
     points: [
       'Performed penetration testing and security audits for DeepStrike and its clients.',
       'Managed AWS and Cloudflare security services.',
@@ -88,7 +88,7 @@ export const EXPERIENCE: Experience[] = [
     role: 'Bug Bounty Hunter',
     company: 'Independent',
     location: 'Remote',
-    period: 'May 2022 — Present',
+    period: 'May 2022 - Present',
     points: [
       'Participated in many bug bounty programs, successfully finding and reporting numerous vulnerabilities.',
     ],
@@ -98,7 +98,7 @@ export const EXPERIENCE: Experience[] = [
     role: 'CTF Player',
     company: 'Competitive Security',
     location: 'Worldwide',
-    period: 'Sep 2021 — Present',
+    period: 'Sep 2021 - Present',
     points: [
       'Consistently achieved top-percentile rankings across web exploitation, OSINT, and mobile hacking.',
     ],
@@ -159,7 +159,7 @@ export const EDUCATION = [
   {
     school: 'Mansoura University',
     program: 'Faculty of Computer & Information Sciences',
-    period: '2021 — 2025',
+    period: '2021 - 2025',
     note: 'Grade: Excellent with Honors',
   },
 ] as const;

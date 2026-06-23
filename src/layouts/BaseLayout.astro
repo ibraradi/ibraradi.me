@@ -31,7 +31,7 @@ const {
 } = Astro.props;
 
 const base = Astro.site ?? SITE.url;
-const pageTitle = title ? `${title} — ${SITE.name}` : SITE.title;
+const pageTitle = title ? `${title} · ${SITE.name}` : SITE.title;
 const canonical = new URL(path ?? Astro.url.pathname, base).toString();
 const ogImage = new URL(image, base).toString();
 const ldBlocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
@@ -46,7 +46,7 @@ const ldBlocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="alternate" type="application/rss+xml" title={`${SITE.name} — Field Notes`} href="/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${SITE.name} · Field Notes`} href="/rss.xml" />
     <link rel="canonical" href={canonical} />
 
     <title>{pageTitle}</title>

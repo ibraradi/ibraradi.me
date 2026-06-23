@@ -23,7 +23,7 @@ const dateFmt = (d: string) =>
         <p class="dh-kicker">Dossier · <b>Field Notes</b></p>
         <h1 class="dh-name" style="font-size: clamp(2.2rem, 6vw, 3.4rem)">Field Notes</h1>
         <p class="dh-assess">
-          Write-ups from the field — offensive security, tooling I had to build, and research worth keeping.
+          Write-ups from the field: offensive security, tooling I had to build, and research worth keeping.
         </p>
       </div>
     </section>
@@ -35,7 +35,7 @@ const dateFmt = (d: string) =>
       </div>
 
       {posts.length === 0 ? (
-        <div class="empty-state">No transmissions published yet — check back soon.</div>
+        <div class="empty-state">No transmissions published yet. Check back soon.</div>
       ) : (
         <div class="notes">
           {posts.map((p) => (

@@ -10,7 +10,7 @@ export async function GET(context) {
   const posts = await getPosts();
 
   return rss({
-    title: `${SITE.name} — Field Notes`,
+    title: `${SITE.name} · Field Notes`,
     description: SITE.description,
     site: context.site ?? SITE.url,
     items: posts.map((post) => ({
