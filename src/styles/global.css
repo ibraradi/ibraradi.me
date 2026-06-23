@@ -1327,8 +1327,6 @@ a.co:hover { text-decoration: underline; }
 .cred-sub { color: var(--muted); font-size: 0.84rem; margin-top: 4px; }
 .cred-sub a { color: var(--accent); text-decoration: none; }
 .cred-sub a:hover { text-decoration: underline; }
-.cred-main a { color: var(--accent); text-decoration: none; }
-.cred-main a:hover { text-decoration: underline; }
 
 /* talks */
 .talks { display: flex; flex-direction: column; gap: 20px; }
