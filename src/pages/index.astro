@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { SITE, SOCIALS, BLOG_ENABLED, EXPERIENCE, SKILLS, AWARDS, EDUCATION, CERTIFICATES, VOLUNTEERING, TALKS } from '../consts';
+import { SITE, SOCIALS, BLOG_ENABLED, EXPERIENCE, SKILLS, AWARDS, DISCLOSURES, EDUCATION, CERTIFICATES, VOLUNTEERING, TALKS } from '../consts';
 import { getPosts } from '../lib/storyblok';
 
 // Severity ranking for findings (most impactful first).
@@ -150,10 +150,28 @@ const personLd = {
       </div>
     </section>
 
+    <!-- DISCLOSURES -->
+    <section class="dsec" data-reveal>
+      <div class="dsec-head">
+        <span class="dsec-no">§06</span><span class="dsec-title">Disclosures</span>
+        <span class="dsec-meta">responsible disclosure</span>
+      </div>
+      <div class="creds">
+        {DISCLOSURES.map((d) => (
+          <div class="cred">
+            <div class="cred-k">CVE · {d.year}</div>
+            <div class="cred-main"><a href={d.url} target="_blank" rel="noopener noreferrer">{d.cve}</a></div>
+            <div class="cred-sub">{d.title}</div>
+            <div class="cred-sub">{d.summary}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+
     <!-- CREDENTIALS -->
     <section class="dsec" id="credentials" data-reveal>
       <div class="dsec-head">
-        <span class="dsec-no">§06</span><span class="dsec-title">Verified Credentials</span>
+        <span class="dsec-no">§07</span><span class="dsec-title">Verified Credentials</span>
         <span class="dsec-meta">education · certifications</span>
       </div>
       <div class="creds">
@@ -181,7 +199,7 @@ const personLd = {
     <!-- TALKS -->
     <section class="dsec" data-reveal>
       <div class="dsec-head">
-        <span class="dsec-no">§07</span><span class="dsec-title">Talks</span>
+        <span class="dsec-no">§08</span><span class="dsec-title">Talks</span>
         <span class="dsec-meta">{TALKS.length} on record</span>
       </div>
       <div class="talks">
@@ -210,7 +228,7 @@ const personLd = {
     {BLOG_ENABLED && (
       <section class="dsec" data-reveal>
         <div class="dsec-head">
-          <span class="dsec-no">§08</span><span class="dsec-title">Field Notes</span>
+          <span class="dsec-no">§09</span><span class="dsec-title">Field Notes</span>
           <span class="dsec-meta">{recentPosts.length} recent</span>
         </div>
         {recentPosts.length === 0 ? (
@@ -233,7 +251,7 @@ const personLd = {
     <!-- COMMS -->
     <section class="dsec" data-reveal>
       <div class="dsec-head">
-        <span class="dsec-no">§09</span><span class="dsec-title">Establish Comms</span>
+        <span class="dsec-no">§10</span><span class="dsec-title">Establish Comms</span>
         <span class="dsec-meta">channels open</span>
       </div>
       <div class="dcomms">

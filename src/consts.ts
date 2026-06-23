@@ -136,6 +136,17 @@ export const AWARDS = [
   'Qualified to CyCTF 2022 Finals',
 ] as const;
 
+export const DISCLOSURES = [
+  {
+    cve: 'CVE-2023-33337',
+    year: '2023',
+    title: 'Server-Side Request Forgery in a PDF conversion SDK',
+    summary:
+      'SSRF in the URL-to-PDF and HTML-to-PDF conversion features: a crafted URL or HTML payload makes the server reach internal applications and sensitive data. Reported and credited as the discoverer.',
+    url: 'https://www.cve.org/CVERecord?id=CVE-2023-33337',
+  },
+] as const;
+
 export const CERTIFICATES = [
   {
     name: 'AWS Certified Cloud Practitioner',
