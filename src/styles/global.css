@@ -1641,6 +1641,9 @@ a.co:hover { text-decoration: underline; }
 .diagram .d-frame { fill: var(--accent); opacity: 0.85; }
 .diagram .d-frame2 { fill: var(--accent-2); opacity: 0.7; }
 .diagram .d-fl { fill: #0a0e14; font-family: var(--mono); font-size: 9px; font-weight: 700; }
+.diagram .d-java { fill: #f4b740; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; }
+.diagram .d-native { fill: var(--accent-2); font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; }
+.diagram .d-dart { fill: var(--accent); font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; }
 
 .article-body table {
   width: 100%;

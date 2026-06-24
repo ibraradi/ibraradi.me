@@ -262,6 +262,48 @@ FIGURES['fig-pickle-rce'] = `<figure class="diagram">
 <figcaption><b>Fig. 01</b> — pickle is not just data. A crafted model file defines <code>__reduce__</code>, so the moment the engineer calls <code>pickle.load()</code> the attacker's <code>os.system(cmd)</code> runs with that process's privileges.</figcaption>
 </figure>`;
 
+FIGURES['fig-rasp-guards'] = `<figure class="diagram">
+<svg viewBox="0 0 720 296" role="img" aria-label="Four RASP guards across three runtimes">
+<text class="d-lane" x="14" y="22">DEFENSE IN DEPTH · 4 GUARDS · 3 RUNTIMES</text>
+<rect class="d-box" x="20" y="34" width="680" height="54" rx="9"/><rect x="20" y="34" width="5" height="54" rx="2" fill="#f4b740"/>
+<text class="d-t" x="42" y="58">#1 · License wrapper</text><text class="d-java" x="684" y="58" text-anchor="end">JAVA</text>
+<text class="d-s" x="42" y="78">detects install source / license   →   System.exit(0)</text>
+<rect class="d-box" x="20" y="96" width="680" height="54" rx="9"/><rect x="20" y="96" width="5" height="54" rx="2" fill="#22d3ee"/>
+<text class="d-t" x="42" y="120">#2 · runStealthChecks()</text><text class="d-native" x="684" y="120" text-anchor="end">NATIVE C</text>
+<text class="d-s" x="42" y="140">detects root + Frida   →   Toast, then native exit(0)</text>
+<rect class="d-box" x="20" y="158" width="680" height="54" rx="9"/><rect x="20" y="158" width="5" height="54" rx="2" fill="#34d399"/>
+<text class="d-t" x="42" y="182">#3 · libapp.so guard</text><text class="d-dart" x="684" y="182" text-anchor="end">COMPILED DART</text>
+<text class="d-s" x="42" y="202">detects Frida (/proc/self/maps) + root   →   dart:io exit()</text>
+<rect class="d-box" x="20" y="220" width="680" height="54" rx="9"/><rect x="20" y="220" width="5" height="54" rx="2" fill="#22d3ee"/>
+<text class="d-t" x="42" y="244">#4 · Watchdog (~10s)</text><text class="d-native" x="684" y="244" text-anchor="end">NATIVE C</text>
+<text class="d-s" x="42" y="264">detects Frida (raw syscall / mem scan)   →   deliberate null-pointer crash</text>
+</svg>
+<figcaption><b>Fig. 01</b> — four guards spread across Java, native C, and compiled Dart, each with a different kill style. Beating one only reveals the next.</figcaption>
+</figure>`;
+
+FIGURES['fig-rasp-pivot'] = `<figure class="diagram">
+<svg viewBox="0 0 720 282" role="img" aria-label="Fighting Frida versus hiding the OS">
+<defs><marker id="arp" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="d-arrow"/></marker></defs>
+<text class="d-no" x="180" y="24" text-anchor="middle">✕  BRING FRIDA — fight every layer</text>
+<text class="d-ok" x="540" y="24" text-anchor="middle">✓  HIDE THE OS — no Frida at all</text>
+<rect class="d-box" x="20" y="38" width="320" height="42" rx="8"/><text class="d-t" x="180" y="64" text-anchor="middle">fake the native check (guard 2)</text>
+<line class="d-edge-dim" x1="180" y1="80" x2="180" y2="96" marker-end="url(#arp)"/>
+<rect class="d-box" x="20" y="98" width="320" height="42" rx="8"/><text class="d-t" x="180" y="124" text-anchor="middle">scrub frida from /proc/self/maps</text>
+<line class="d-edge-dim" x1="180" y1="140" x2="180" y2="156" marker-end="url(#arp)"/>
+<rect class="d-box" x="20" y="158" width="320" height="42" rx="8"/><text class="d-t" x="180" y="184" text-anchor="middle">watchdog catches Frida anyway</text>
+<line class="d-edge-dim" x1="180" y1="200" x2="180" y2="216" marker-end="url(#arp)"/>
+<rect x="20" y="218" width="320" height="44" rx="8" fill="rgba(255,107,129,0.08)" stroke="#ff6b81" stroke-width="1.1"/><text class="d-no" x="180" y="245" text-anchor="middle">fighting the tool, not the app</text>
+<rect class="d-box" x="380" y="38" width="320" height="42" rx="8"/><text class="d-t" x="540" y="64" text-anchor="middle">Magisk Zygisk DenyList → root hidden</text>
+<line class="d-edge-dim" x1="540" y1="80" x2="540" y2="96" marker-end="url(#arp)"/>
+<rect class="d-box" x="380" y="98" width="320" height="42" rx="8"/><text class="d-t" x="540" y="124" text-anchor="middle">kill frida-server (nothing injected)</text>
+<line class="d-edge-dim" x1="540" y1="140" x2="540" y2="156" marker-end="url(#arp)"/>
+<rect class="d-box" x="380" y="158" width="320" height="42" rx="8"/><text class="d-t" x="540" y="184" text-anchor="middle">TrickyStore → Play Integrity OK</text>
+<line class="d-edge-dim" x1="540" y1="200" x2="540" y2="216" marker-end="url(#arp)"/>
+<rect class="d-box-a" x="380" y="218" width="320" height="44" rx="8"/><text class="d-ok" x="540" y="245" text-anchor="middle">all 4 guards pass · app runs</text>
+</svg>
+<figcaption><b>Fig. 02</b> — the pivot. Every guard hunts for root or Frida, so bringing Frida means fighting each layer; hiding the environment at the OS level (Zygisk DenyList + integrity spoofing, no Frida) clears all four at once.</figcaption>
+</figure>`;
+
 function injectFigures(html) {
   return html.replace(/<p>\s*\[\[([a-z0-9-]+)\]\]\s*<\/p>/g, (_m, key) => FIGURES[key] || '');
 }
