@@ -7,7 +7,7 @@ import { getPosts } from '../lib/storyblok';
 const SEV = ['crit', 'high', 'medium', 'info'];
 const findings = EXPERIENCE.map((xp, i) => ({ ...xp, sev: SEV[i] ?? 'info', n: i + 1 }));
 
-// Recent field notes (blog) — newest few, shown only if the blog has posts.
+// Recent field notes (blog) - newest few, shown only if the blog has posts.
 const recentPosts = BLOG_ENABLED ? (await getPosts()).slice(0, 4) : [];
 const noteDate = (d: string) =>
   d ? new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '';

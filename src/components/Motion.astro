@@ -84,7 +84,7 @@
     );
   };
 
-  // 6) Live clock — Kuala Lumpur time (runs regardless of motion prefs)
+  // 6) Live clock - Kuala Lumpur time (runs regardless of motion prefs)
   const clock = () => {
     const els = document.querySelectorAll<HTMLElement>('[data-clock]');
     if (!els.length) return;
@@ -100,7 +100,7 @@
     setInterval(tick, 1000);
   };
 
-  // 7) Scroll cue — fades out once the user starts scrolling
+  // 7) Scroll cue - fades out once the user starts scrolling
   const scrollCue = () => {
     const cue = document.querySelector<HTMLElement>('.scroll-cue');
     if (!cue) return;

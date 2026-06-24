@@ -1,4 +1,4 @@
-// Generates public/og.png (1200x630) — the social preview card.
+// Generates public/og.png (1200x630) - the social preview card.
 // Run once with: node scripts/gen-og.mjs   (re-run if the text changes)
 import sharp from 'sharp';
 

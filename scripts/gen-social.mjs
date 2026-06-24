@@ -42,11 +42,11 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" v
 <text x="1055" y="388" text-anchor="middle" font-family="monospace" font-size="20" fill="#f4f7fb">Firestore</text>
 <text x="1055" y="409" text-anchor="middle" font-family="monospace" font-size="13" fill="#5c6b82">gRPC / HTTP-2</text>
 
-<text x="600" y="376" text-anchor="middle" font-family="monospace" font-size="16" fill="#8a99b0">one long-lived HTTP/2 stream — protobuf Write / Listen frames, multiplexed</text>
+<text x="600" y="376" text-anchor="middle" font-family="monospace" font-size="16" fill="#8a99b0">one long-lived HTTP/2 stream - protobuf Write / Listen frames, multiplexed</text>
 <line x1="220" y1="407" x2="980" y2="407" stroke="#2a3a50" stroke-width="2"/>
 ${frames}
 
-<text x="600" y="470" text-anchor="middle" font-family="monospace" font-size="18" fill="#ff6b81">✕  a normal proxy sees one opaque CONNECT tunnel — every op hidden inside</text>
+<text x="600" y="470" text-anchor="middle" font-family="monospace" font-size="18" fill="#ff6b81">✕  a normal proxy sees one opaque CONNECT tunnel - every op hidden inside</text>
 <text x="70" y="524" font-family="monospace" font-size="19" fill="#34d399">✓  the fix: hook the SDK with Frida → capture → rebuild → replay over the REST API</text>
 
 <line x1="70" y1="556" x2="1130" y2="556" stroke="#1e2a3a" stroke-width="1"/>

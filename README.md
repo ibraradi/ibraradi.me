@@ -1,14 +1,14 @@
 # ibraradi.me
 
-Personal website & blog of **Ibrahim Radi** — Security Engineer & technical co-founder of Flawtrack.
+Personal website & blog of **Ibrahim Radi** - Security Engineer & technical co-founder of Flawtrack.
 
 Built with [Astro](https://astro.build) as a fully static site, deployed on **Cloudflare Pages**.
 
 ## Tech
 
-- **Astro 5** — static output, zero client JS except a tiny mobile-menu toggle
-- **Content Collections** — blog posts in Markdown (`src/content/blog/`)
-- **@astrojs/sitemap** + **@astrojs/rss** — `sitemap-index.xml` and `/rss.xml`
+- **Astro 5** - static output, zero client JS except a tiny mobile-menu toggle
+- **Content Collections** - blog posts in Markdown (`src/content/blog/`)
+- **@astrojs/sitemap** + **@astrojs/rss** - `sitemap-index.xml` and `/rss.xml`
 - Hand-rolled CSS (no framework), dark theme with terminal/mono accents
 - Fonts: Inter + JetBrains Mono (Google Fonts)
 
@@ -23,7 +23,7 @@ npm run preview  # preview the production build
 
 ## Editing content
 
-Almost everything on the homepage is data-driven from **`src/consts.ts`** — experience,
+Almost everything on the homepage is data-driven from **`src/consts.ts`** - experience,
 skills, awards, education, certificates, volunteering, stats, and social links. Edit that
 file and the page updates.
 
@@ -48,7 +48,7 @@ The URL is derived from the filename: `my-post.md` → `/blog/my-post/`.
 
 This is a static site, so **no adapter is needed**.
 
-### Option A — Git integration (recommended)
+### Option A - Git integration (recommended)
 
 1. Push this repo to GitHub.
 2. In the Cloudflare dashboard: **Workers & Pages → Create → Pages → Connect to Git**.
@@ -59,7 +59,7 @@ This is a static site, so **no adapter is needed**.
    - **Node version:** set env var `NODE_VERSION` = `20` (or newer) if needed
 4. Deploy. Every push to `main` redeploys automatically.
 
-### Option B — Direct upload via Wrangler
+### Option B - Direct upload via Wrangler
 
 ```bash
 npm run build

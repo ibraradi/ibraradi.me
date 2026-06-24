@@ -36,7 +36,7 @@ const skills = SKILLS.map(
 );
 
 const experience = EXPERIENCE.flatMap((xp) => [
-  `<span class="c-cyan">${xp.role}</span> @ <span class="c-strong">${xp.company}</span> <span class="c-muted">— ${xp.period}</span>`,
+  `<span class="c-cyan">${xp.role}</span> @ <span class="c-strong">${xp.company}</span> <span class="c-muted">- ${xp.period}</span>`,
   `  <span class="c-muted">${xp.location}</span>`,
 ]);
 
@@ -44,7 +44,7 @@ const awards = AWARDS.map((a) => `<span class="c-accent">★</span> ${a}`);
 
 const contact = [
   `email   <a href="mailto:${SOCIALS.email}">${SOCIALS.email}</a>`,
-  `<span class="c-muted">Drop a line anytime — security work, collabs, or just to talk shop.</span>`,
+  `<span class="c-muted">Drop a line anytime - security work, collabs, or just to talk shop.</span>`,
 ];
 
 const social = [
@@ -57,7 +57,7 @@ const education = EDUCATION.map(
 );
 
 const certs = CERTIFICATES.map(
-  (c) => `<span class="c-accent">★</span> ${c.name} <span class="c-muted">— ${c.issuer}</span>`,
+  (c) => `<span class="c-accent">★</span> ${c.name} <span class="c-muted">- ${c.issuer}</span>`,
 );
 
 const volunteering = VOLUNTEERING.flatMap((v) => [
@@ -144,7 +144,7 @@ const CHIPS = ['whoami', 'skills', 'experience', 'awards', 'education', 'contact
     }
     if (cmd === 'exit') { addLine('<span class="c-muted">There is no escape. Try</span> <span class="c-accent">help</span>.'); return; }
     if (data[cmd]) { printLines(data[cmd]); return; }
-    addLine(`command not found: <span class="c-strong">${raw}</span> — type <span class="c-accent">help</span>`);
+    addLine(`command not found: <span class="c-strong">${raw}</span> - type <span class="c-accent">help</span>`);
   };
 
   const commands = Object.keys(data).concat(['help', 'clear', 'ls']);
@@ -177,7 +177,7 @@ const CHIPS = ['whoami', 'skills', 'experience', 'awards', 'education', 'contact
     input.focus();
   });
 
-  // Boot sequence — typed line by line, then hand over to the user.
+  // Boot sequence - typed line by line, then hand over to the user.
   const boot: Lines = [
     '<span class="c-muted">booting ibraradi.me …</span>',
     `<span class="c-muted">loading profile [</span><span class="c-accent">OK</span><span class="c-muted">]</span>`,

@@ -1,7 +1,7 @@
 // Prebuild step (plain Node): fetch published posts from Storyblok, render their
 // markdown to Shiki-highlighted HTML, and write src/generated/posts.json.
 //
-// Runs in plain Node — where Shiki's grammar loading works reliably (it breaks
+// Runs in plain Node - where Shiki's grammar loading works reliably (it breaks
 // when bundled into the Astro/Vite build). Astro then just outputs this HTML.
 import { writeFile, mkdir } from 'node:fs/promises';
 import sharp from 'sharp';
@@ -13,7 +13,7 @@ import { codeToHtml } from 'shiki';
 try {
   process.loadEnvFile('.env');
 } catch {
-  /* no .env (e.g. CI) — use process.env */
+  /* no .env (e.g. CI) - use process.env */
 }
 
 const TOKEN = process.env.STORYBLOK_TOKEN;
@@ -77,7 +77,7 @@ const FIGURES = {
 <text class="d-lane" x="14" y="212">FIRESTORE  ·  gRPC OVER HTTP/2 (TLS)</text>
 <rect class="d-box" x="40" y="230" width="108" height="46" rx="8"/><text class="d-t" x="94" y="258" text-anchor="middle">app</text>
 <rect class="d-box" x="612" y="230" width="108" height="46" rx="8"/><text class="d-t" x="666" y="258" text-anchor="middle">server</text>
-<text class="d-s" x="380" y="240" text-anchor="middle">one long-lived stream — protobuf frames, multiplexed</text>
+<text class="d-s" x="380" y="240" text-anchor="middle">one long-lived stream - protobuf frames, multiplexed</text>
 <line class="d-edge-dim" x1="148" y1="259" x2="612" y2="259"/>
 <rect class="d-frame" x="162" y="251" width="40" height="16" rx="3"/><text class="d-fl" x="182" y="263" text-anchor="middle">W</text>
 <rect class="d-frame2" x="218" y="251" width="40" height="16" rx="3"/><text class="d-fl" x="238" y="263" text-anchor="middle">L</text>
@@ -88,9 +88,9 @@ const FIGURES = {
 <rect class="d-frame" x="498" y="251" width="40" height="16" rx="3"/><text class="d-fl" x="518" y="263" text-anchor="middle">W</text>
 <rect class="d-frame2" x="554" y="251" width="40" height="16" rx="3"/><text class="d-fl" x="574" y="263" text-anchor="middle">L</text>
 <rect class="d-chip-no" x="244" y="290" width="272" height="22" rx="5"/><text class="d-chip-nt" x="380" y="305" text-anchor="middle">CONNECT firestore.googleapis.com:443</text>
-<text class="d-no" x="380" y="338" text-anchor="middle">proxy sees one opaque connection — every op hidden inside   [ invisible ]</text>
+<text class="d-no" x="380" y="338" text-anchor="middle">proxy sees one opaque connection - every op hidden inside   [ invisible ]</text>
 </svg>
-<figcaption><b>Fig. 01</b> — the transport mismatch. Plain REST gives the proxy one entry per request; Firestore multiplexes every read (<b>L</b>isten) and write (<b>W</b>rite) as binary protobuf frames inside a single TLS stream, so individual operations never surface.</figcaption>
+<figcaption><b>Fig. 01</b> - the transport mismatch. Plain REST gives the proxy one entry per request; Firestore multiplexes every read (<b>L</b>isten) and write (<b>W</b>rite) as binary protobuf frames inside a single TLS stream, so individual operations never surface.</figcaption>
 </figure>`,
   'fig-pipeline': `<figure class="diagram">
 <svg viewBox="0 0 720 292" role="img" aria-label="One capture feeding two front-ends">
@@ -106,7 +106,7 @@ const FIGURES = {
 <rect class="d-box" x="198" y="196" width="160" height="58" rx="9"/><text class="d-t" x="278" y="222" text-anchor="middle">Workbench</text><text class="d-s" x="278" y="240" text-anchor="middle">standalone GUI</text>
 <rect class="d-box" x="394" y="196" width="180" height="58" rx="9"/><text class="d-t" x="484" y="222" text-anchor="middle">Burp extension</text><text class="d-s" x="484" y="240" text-anchor="middle">Proxy → HTTP history</text>
 </svg>
-<figcaption><b>Fig. 02</b> — one capture, two front-ends. The Frida agent's feed drives both the standalone Workbench and the Burp extension; either rebuilds the Firestore REST call and replays it.</figcaption>
+<figcaption><b>Fig. 02</b> - one capture, two front-ends. The Frida agent's feed drives both the standalone Workbench and the Burp extension; either rebuilds the Firestore REST call and replays it.</figcaption>
 </figure>`,
 };
 
@@ -120,10 +120,10 @@ FIGURES['fig-jwt-arch'] = `<figure class="diagram">
 <line class="d-edge-dim" x1="224" y1="75" x2="474" y2="106" marker-end="url(#ajw1)"/><text class="d-no" x="352" y="82" text-anchor="middle">Source: B-One</text>
 <line class="d-edge-dim" x1="224" y1="157" x2="474" y2="126" marker-end="url(#ajw1)"/><text class="d-no" x="352" y="166" text-anchor="middle">Source: B-Two</text>
 <text class="d-s" x="360" y="212" text-anchor="middle">tenant routing trusts the client-set Source header</text>
-<text class="d-s" x="360" y="234" text-anchor="middle">JWT identifies the user by email (username) — no tenant_id / aud / scope</text>
+<text class="d-s" x="360" y="234" text-anchor="middle">JWT identifies the user by email (username) - no tenant_id / aud / scope</text>
 <text class="d-no" x="360" y="268" text-anchor="middle">✕ nothing cryptographically binds a token to its tenant</text>
 </svg>
-<figcaption><b>Fig. 01</b> — the architecture. Two subdomains share one API; tenants are told apart only by a client-supplied <code>Source</code> header, and JWTs are keyed on email — so a token carries no proof of which tenant it belongs to.</figcaption>
+<figcaption><b>Fig. 01</b> - the architecture. Two subdomains share one API; tenants are told apart only by a client-supplied <code>Source</code> header, and JWTs are keyed on email - so a token carries no proof of which tenant it belongs to.</figcaption>
 </figure>`;
 
 FIGURES['fig-jwt-attack'] = `<figure class="diagram">
@@ -140,7 +140,7 @@ FIGURES['fig-jwt-attack'] = `<figure class="diagram">
 <line class="d-edge" x1="204" y1="188" x2="300" y2="188" marker-end="url(#ajw2)"/>
 <rect class="d-box-a" x="302" y="160" width="394" height="56" rx="9"/><text class="d-t" x="499" y="186" text-anchor="middle">full admin across the platform</text><text class="d-s" x="499" y="204" text-anchor="middle">all users · reset creds · logs · billing</text>
 </svg>
-<figcaption><b>Fig. 02</b> — the exploit. A JWT minted on one tenant is replayed against another by flipping the <code>Source</code> header; trusted by email alone, it impersonates the matching user — then the same move with an admin's email yields full control.</figcaption>
+<figcaption><b>Fig. 02</b> - the exploit. A JWT minted on one tenant is replayed against another by flipping the <code>Source</code> header; trusted by email alone, it impersonates the matching user - then the same move with an admin's email yields full control.</figcaption>
 </figure>`;
 
 FIGURES['fig-response-manip'] = `<figure class="diagram">
@@ -158,9 +158,9 @@ FIGURES['fig-response-manip'] = `<figure class="diagram">
 <text class="d-lane" x="376" y="162">AFTER · REWRITTEN IN FLIGHT</text>
 <rect class="d-chip" x="376" y="176" width="320" height="24" rx="5"/><text class="d-chip-t" x="536" y="192" text-anchor="middle">s/Free/Paid/g → User.Plan = "Paid"</text>
 <rect class="d-chip" x="376" y="208" width="320" height="24" rx="5"/><text class="d-chip-t" x="536" y="224" text-anchor="middle">FeaturesMap: true · "Full_Access"</text>
-<text class="d-no" x="360" y="268" text-anchor="middle">✕ no server-side check — the client trusts the response it is given</text>
+<text class="d-no" x="360" y="268" text-anchor="middle">✕ no server-side check - the client trusts the response it is given</text>
 </svg>
-<figcaption><b>Fig. 01</b> — the entitlement gate lived entirely in the response. The extension rewrites the index-page stream in flight, flipping the <code>Plan</code> string and every feature flag, so a free account renders with full paid access.</figcaption>
+<figcaption><b>Fig. 01</b> - the entitlement gate lived entirely in the response. The extension rewrites the index-page stream in flight, flipping the <code>Plan</code> string and every feature flag, so a free account renders with full paid access.</figcaption>
 </figure>`;
 
 FIGURES['fig-soql-xss'] = `<figure class="diagram">
@@ -173,11 +173,11 @@ FIGURES['fig-soql-xss'] = `<figure class="diagram">
 <line class="d-edge-dim" x1="208" y1="86" x2="266" y2="86" marker-end="url(#asx)"/><text class="d-s" x="237" y="78" text-anchor="middle">store</text>
 <line class="d-edge" x1="452" y1="86" x2="510" y2="86" marker-end="url(#asx)"/><text class="d-s" x="481" y="78" text-anchor="middle">render</text>
 <rect class="d-chip" x="150" y="152" width="420" height="26" rx="5"/><text class="d-chip-t" x="360" y="169" text-anchor="middle">GET /QueryConsole?q=SELECT Id,FirstName,… FROM User</text>
-<rect class="d-chip-no" x="150" y="188" width="420" height="26" rx="5"/><text class="d-chip-nt" x="360" y="205" text-anchor="middle">Content-Type: text/html — not JSON, not encoded</text>
+<rect class="d-chip-no" x="150" y="188" width="420" height="26" rx="5"/><text class="d-chip-nt" x="360" y="205" text-anchor="middle">Content-Type: text/html - not JSON, not encoded</text>
 <text class="d-no" x="360" y="248" text-anchor="middle">✕ the dashboard UI encoded the output, the raw endpoint did not</text>
 <text class="d-ok" x="360" y="274" text-anchor="middle">payload executes for every consumer of the endpoint</text>
 </svg>
-<figcaption><b>Fig. 01</b> — the dashboard escaped query results, but the underlying <code>QueryConsole</code> endpoint returned raw HTML. A payload stored in a user record on the managed site executes in the browser of anyone who runs the query.</figcaption>
+<figcaption><b>Fig. 01</b> - the dashboard escaped query results, but the underlying <code>QueryConsole</code> endpoint returned raw HTML. A payload stored in a user record on the managed site executes in the browser of anyone who runs the query.</figcaption>
 </figure>`;
 
 FIGURES['fig-appt-arch'] = `<figure class="diagram">
@@ -194,7 +194,7 @@ FIGURES['fig-appt-arch'] = `<figure class="diagram">
 <rect class="d-chip-no" x="28" y="150" width="430" height="26" rx="5"/><text class="d-chip-nt" x="243" y="167" text-anchor="middle">?…&amp;PHPSESSID=…  →  session token rides in the URL</text>
 <text class="d-no" x="243" y="206" text-anchor="middle">✕ leaks to history, logs, referrers, Wayback</text>
 </svg>
-<figcaption><b>Fig. 01</b> — the architecture. Guests book appointments without an account; the site tracks sessions with a <code>PHPSESSID</code> in the query string instead of a cookie, so the token leaks into archived URLs.</figcaption>
+<figcaption><b>Fig. 01</b> - the architecture. Guests book appointments without an account; the site tracks sessions with a <code>PHPSESSID</code> in the query string instead of a cookie, so the token leaks into archived URLs.</figcaption>
 </figure>`;
 
 FIGURES['fig-upload-xss'] = `<figure class="diagram">
@@ -213,7 +213,7 @@ FIGURES['fig-upload-xss'] = `<figure class="diagram">
 <rect class="d-chip-no" x="180" y="234" width="360" height="26" rx="5"/><text class="d-chip-nt" x="360" y="251" text-anchor="middle">"&gt;&lt;img src=x onerror=alert()&gt;</text>
 <text class="d-no" x="360" y="288" text-anchor="middle">✕ attacker-set URL rendered in href, unsanitised → XSS in admin session</text>
 </svg>
-<figcaption><b>Fig. 02</b> — the upload data flow. The guest controls the file URL the cloud service returns; the server stores it and the admin panel renders it inside an <code>href</code> without sanitising, so a crafted URL executes as script in the admin's session.</figcaption>
+<figcaption><b>Fig. 02</b> - the upload data flow. The guest controls the file URL the cloud service returns; the server stores it and the admin panel renders it inside an <code>href</code> without sanitising, so a crafted URL executes as script in the admin's session.</figcaption>
 </figure>`;
 
 FIGURES['fig-attachment-takeover'] = `<figure class="diagram">
@@ -236,9 +236,9 @@ FIGURES['fig-attachment-takeover'] = `<figure class="diagram">
 <rect class="d-chip" x="340" y="236" width="150" height="24" rx="5"/><text class="d-chip-t" x="415" y="252" text-anchor="middle">Twilio · Stripe</text>
 <rect class="d-chip" x="502" y="236" width="100" height="24" rx="5"/><text class="d-chip-t" x="552" y="252" text-anchor="middle">SendGrid</text>
 <rect class="d-chip" x="614" y="236" width="86" height="24" rx="5"/><text class="d-chip-t" x="657" y="252" text-anchor="middle">RSA key</text>
-<text class="d-no" x="360" y="296" text-anchor="middle">✕ a URL fetcher that resolves local paths is a file read — and the file body is the secrets store</text>
+<text class="d-no" x="360" y="296" text-anchor="middle">✕ a URL fetcher that resolves local paths is a file read - and the file body is the secrets store</text>
 </svg>
-<figcaption><b>Fig. 01</b> — the attachment fetcher accepted a bare local path instead of a URL, turning an email feature into a server-side file read. Reading <code>/proc/self/environ</code> returned the process environment and its secrets straight into the attacker's inbox.</figcaption>
+<figcaption><b>Fig. 01</b> - the attachment fetcher accepted a bare local path instead of a URL, turning an email feature into a server-side file read. Reading <code>/proc/self/environ</code> returned the process environment and its secrets straight into the attacker's inbox.</figcaption>
 </figure>`;
 
 FIGURES['fig-pickle-rce'] = `<figure class="diagram">
@@ -259,7 +259,7 @@ FIGURES['fig-pickle-rce'] = `<figure class="diagram">
 <text class="d-no" x="500" y="262" text-anchor="middle">✕ unpickling runs code,</text>
 <text class="d-no" x="500" y="282" text-anchor="middle">the data file is the program</text>
 </svg>
-<figcaption><b>Fig. 01</b> — pickle is not just data. A crafted model file defines <code>__reduce__</code>, so the moment the engineer calls <code>pickle.load()</code> the attacker's <code>os.system(cmd)</code> runs with that process's privileges.</figcaption>
+<figcaption><b>Fig. 01</b> - pickle is not just data. A crafted model file defines <code>__reduce__</code>, so the moment the engineer calls <code>pickle.load()</code> the attacker's <code>os.system(cmd)</code> runs with that process's privileges.</figcaption>
 </figure>`;
 
 FIGURES['fig-rasp-guards'] = `<figure class="diagram">
@@ -278,14 +278,14 @@ FIGURES['fig-rasp-guards'] = `<figure class="diagram">
 <text class="d-t" x="42" y="244">#4 · Watchdog (~10s)</text><text class="d-native" x="684" y="244" text-anchor="end">NATIVE C</text>
 <text class="d-s" x="42" y="264">detects Frida (raw syscall / mem scan)   →   deliberate null-pointer crash</text>
 </svg>
-<figcaption><b>Fig. 01</b> — four guards spread across Java, native C, and compiled Dart, each with a different kill style. Beating one only reveals the next.</figcaption>
+<figcaption><b>Fig. 01</b> - four guards spread across Java, native C, and compiled Dart, each with a different kill style. Beating one only reveals the next.</figcaption>
 </figure>`;
 
 FIGURES['fig-rasp-pivot'] = `<figure class="diagram">
 <svg viewBox="0 0 720 282" role="img" aria-label="Fighting Frida versus hiding the OS">
 <defs><marker id="arp" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="d-arrow"/></marker></defs>
-<text class="d-no" x="180" y="24" text-anchor="middle">✕  BRING FRIDA — fight every layer</text>
-<text class="d-ok" x="540" y="24" text-anchor="middle">✓  HIDE THE OS — no Frida at all</text>
+<text class="d-no" x="180" y="24" text-anchor="middle">✕  BRING FRIDA - fight every layer</text>
+<text class="d-ok" x="540" y="24" text-anchor="middle">✓  HIDE THE OS - no Frida at all</text>
 <rect class="d-box" x="20" y="38" width="320" height="42" rx="8"/><text class="d-t" x="180" y="64" text-anchor="middle">fake the native check (guard 2)</text>
 <line class="d-edge-dim" x1="180" y1="80" x2="180" y2="96" marker-end="url(#arp)"/>
 <rect class="d-box" x="20" y="98" width="320" height="42" rx="8"/><text class="d-t" x="180" y="124" text-anchor="middle">scrub frida from /proc/self/maps</text>
@@ -301,7 +301,7 @@ FIGURES['fig-rasp-pivot'] = `<figure class="diagram">
 <line class="d-edge-dim" x1="540" y1="200" x2="540" y2="216" marker-end="url(#arp)"/>
 <rect class="d-box-a" x="380" y="218" width="320" height="44" rx="8"/><text class="d-ok" x="540" y="245" text-anchor="middle">all 4 guards pass · app runs</text>
 </svg>
-<figcaption><b>Fig. 02</b> — the pivot. Every guard hunts for root or Frida, so bringing Frida means fighting each layer; hiding the environment at the OS level (Zygisk DenyList + integrity spoofing, no Frida) clears all four at once.</figcaption>
+<figcaption><b>Fig. 02</b> - the pivot. Every guard hunts for root or Frida, so bringing Frida means fighting each layer; hiding the environment at the OS level (Zygisk DenyList + integrity spoofing, no Frida) clears all four at once.</figcaption>
 </figure>`;
 
 function injectFigures(html) {
@@ -361,10 +361,10 @@ async function main() {
     if (res.ok) {
       stories = (await res.json()).stories || [];
     } else {
-      console.error(`Storyblok fetch failed: ${res.status} — writing empty posts.`);
+      console.error(`Storyblok fetch failed: ${res.status} - writing empty posts.`);
     }
   } else {
-    console.error('No STORYBLOK_TOKEN set — writing empty posts.json.');
+    console.error('No STORYBLOK_TOKEN set - writing empty posts.json.');
   }
 
   const posts = [];

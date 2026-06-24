@@ -18,7 +18,7 @@ try {
     if (p?.slug && p?.date) postLastmod[`https://ibraradi.me/blog/${p.slug}/`] = new Date(p.date).toISOString();
   }
 } catch {
-  /* posts.json not generated yet — sitemap simply omits lastmod */
+  /* posts.json not generated yet - sitemap simply omits lastmod */
 }
 
 // https://astro.build/config

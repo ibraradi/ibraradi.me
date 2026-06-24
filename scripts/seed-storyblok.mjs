@@ -41,7 +41,7 @@ async function ensurePostComponent() {
     tags: { type: 'text', pos: 3, display_name: 'Tags (comma-separated)' },
     // Plain textarea stores raw markdown verbatim. The 'markdown' field type
     // re-serializes content and destroys fenced code blocks (``` + language),
-    // which breaks syntax highlighting — so we keep the source as raw text.
+    // which breaks syntax highlighting - so we keep the source as raw text.
     content: { type: 'textarea', pos: 4, display_name: 'Content (markdown)' },
   };
   const payload = { component: { name: 'post', display_name: 'Post', schema, is_root: true, is_nestable: false } };

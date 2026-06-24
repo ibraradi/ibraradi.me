@@ -804,7 +804,7 @@ section {
    Interactions & motion
    ============================================================ */
 
-/* Scroll reveal — only hide when JS is active so no-JS still shows all */
+/* Scroll reveal - only hide when JS is active so no-JS still shows all */
 .js [data-reveal] {
   opacity: 0;
   transform: translateY(22px);
@@ -1259,7 +1259,7 @@ section {
 .field-v { color: var(--text-strong); font-size: 0.92rem; margin-top: 4px; }
 .field-v.mono { font-family: var(--mono); font-size: 0.86rem; }
 
-/* redacted text — reveals on hover */
+/* redacted text - reveals on hover */
 .redacted {
   background: var(--text); color: transparent; border-radius: 3px; padding: 0 6px;
   cursor: help; user-select: none; transition: background 0.2s ease, color 0.2s ease;
@@ -1352,7 +1352,7 @@ a.co:hover { text-decoration: underline; }
 .dcomms .dc-k { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
 .dcomms .dc-v { color: var(--text-strong); font-size: 0.86rem; }
 
-/* scroll cue — signals there's more below on first load */
+/* scroll cue - signals there's more below on first load */
 .scroll-cue {
   position: fixed;
   left: 50%;
@@ -1481,7 +1481,7 @@ a.co:hover { text-decoration: underline; }
   /* minmax(0, …) lets the column shrink below its children's min-content,
      so wide code/figures don't force horizontal overflow */
   .post-shell { grid-template-columns: minmax(0, 1fr); }
-  /* sidebar TOC doesn't fit a narrow column — hide it (the headings are still
+  /* sidebar TOC doesn't fit a narrow column - hide it (the headings are still
      in the article) */
   .toc { display: none; }
 }
