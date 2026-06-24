@@ -354,8 +354,16 @@ ${titleSvg}
 async function main() {
   let stories = [];
   if (TOKEN) {
+    // Storyblok's CDN caches published responses keyed by cache_version (cv).
+    // Fetch the space's current cv so every build pulls the latest publish,
+    // not a stale cached copy. Fall back to a timestamp (also busts cache).
+    let cv = Date.now();
+    try {
+      const sp = await fetch(`${API}/v2/cdn/spaces/me?token=${TOKEN}`);
+      if (sp.ok) cv = (await sp.json())?.space?.version || cv;
+    } catch {}
     const url =
-      `${API}/v2/cdn/stories?token=${TOKEN}&version=published` +
+      `${API}/v2/cdn/stories?token=${TOKEN}&version=published&cv=${cv}` +
       `&starts_with=blog/&content_type=post&per_page=100&sort_by=content.date:desc`;
     const res = await fetch(url);
     if (res.ok) {
