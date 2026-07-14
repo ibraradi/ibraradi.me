@@ -64,8 +64,8 @@ export const EXPERIENCE: Experience[] = [
       'Threat Intel: wrote data pipelines and parsers that collected and processed 2B+ stealer leaks.',
       'ASM Scaling: built a distributed scanning engine using hundreds of concurrent instances to map large infrastructures (7,000+ assets) in under 3 hours.',
       'Brand Protection: created a monitoring system that analyzed 100,000+ network mentions, leading to 1,000+ successful threat takedowns.',
-      'Client Pentesting: led enterprise penetration tests and delivered technical remediation roadmaps.',
-      'Sales & Product: ran technical product demos and contributed directly to marketing strategy.',
+      'Pentesting: ran enterprise penetration tests across web, API, cloud, and infrastructure, and delivered technical remediation roadmaps.',
+      'AI / RAG: integrated AI/RAG models with third-party APIs to automate enrichment and triage of security findings.',
     ],
     tags: ['ASM', 'Threat Intel', 'AI / RAG', 'DevSecOps', 'Distributed Systems', 'GCP'],
   },
@@ -125,6 +125,22 @@ export const SKILLS: SkillGroup[] = [
     title: 'Engineering & AI',
     items: ['Backend Development', 'Data Pipelines', 'Frontend Dashboards', 'AI / RAG Integration', 'Third-party APIs'],
   },
+];
+
+export type Capability = { domain: string; tier: 'Core' | 'Proficient' | 'Developing' };
+
+// Honest self-assessment. Core = daily strength; Developing = actively growing.
+export const CAPABILITIES: Capability[] = [
+  { domain: 'Web & API Penetration Testing', tier: 'Core' },
+  { domain: 'Bug Bounty & Recon', tier: 'Core' },
+  { domain: 'Attack Surface Management', tier: 'Core' },
+  { domain: 'Threat Intelligence', tier: 'Proficient' },
+  { domain: 'Application Security & Secure SDLC', tier: 'Proficient' },
+  { domain: 'Cloud Security — AWS · GCP · Cloudflare', tier: 'Proficient' },
+  { domain: 'DevSecOps & CI/CD', tier: 'Proficient' },
+  { domain: 'OSINT & Mobile', tier: 'Proficient' },
+  { domain: 'AI / RAG & Automation', tier: 'Proficient' },
+  { domain: 'Reverse Engineering & Exploit Dev', tier: 'Developing' },
 ];
 
 export const AWARDS = [

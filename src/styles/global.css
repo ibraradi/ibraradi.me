@@ -1312,6 +1312,23 @@ a.co:hover { text-decoration: underline; }
 .mx-tags { display: flex; flex-wrap: wrap; gap: 7px; }
 .mx-tag { font-size: 0.78rem; color: var(--text); background: var(--surface-2); border: 1px solid var(--border); padding: 4px 10px; border-radius: 7px; }
 
+/* capability matrix — proficiency rows */
+.capmx { border: 1px solid var(--border); border-radius: 10px; background: var(--paper); overflow: hidden; }
+.cap-row { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 16px; padding: 12px 16px; border-top: 1px solid var(--border); }
+.cap-row:first-child { border-top: none; }
+.cap-domain { font-size: 0.9rem; color: var(--text); }
+.cap-meter { display: inline-flex; gap: 4px; }
+.cap-seg { width: 22px; height: 5px; border-radius: 3px; background: var(--surface-2); border: 1px solid var(--border); }
+.cap-seg.on { background: var(--accent); border-color: var(--accent); }
+.cap-tier { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); min-width: 76px; text-align: right; }
+.cap-tier.t-core { color: var(--accent); }
+.cap-tier.t-developing { color: var(--muted-dim); }
+@media (max-width: 640px) {
+  .cap-row { grid-template-columns: 1fr auto; row-gap: 8px; }
+  .cap-meter { grid-column: 1 / -1; order: 3; }
+  .cap-tier { min-width: 0; }
+}
+
 /* field record (awards) */
 .record { display: flex; flex-direction: column; }
 .rec-row { display: grid; grid-template-columns: 22px 1fr; gap: 12px; padding: 11px 0; border-bottom: 1px dashed var(--border); align-items: baseline; }
