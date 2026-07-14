@@ -127,22 +127,6 @@ export const SKILLS: SkillGroup[] = [
   },
 ];
 
-export type Capability = { domain: string; tier: 'Core' | 'Proficient' | 'Developing' };
-
-// Honest self-assessment. Core = daily strength; Developing = actively growing.
-export const CAPABILITIES: Capability[] = [
-  { domain: 'Web & API Penetration Testing', tier: 'Core' },
-  { domain: 'Bug Bounty & Recon', tier: 'Core' },
-  { domain: 'Attack Surface Management', tier: 'Core' },
-  { domain: 'Threat Intelligence', tier: 'Proficient' },
-  { domain: 'Application Security & Secure SDLC', tier: 'Proficient' },
-  { domain: 'Cloud Security — AWS · GCP · Cloudflare', tier: 'Proficient' },
-  { domain: 'DevSecOps & CI/CD', tier: 'Proficient' },
-  { domain: 'OSINT & Mobile', tier: 'Proficient' },
-  { domain: 'AI / RAG & Automation', tier: 'Proficient' },
-  { domain: 'Reverse Engineering & Exploit Dev', tier: 'Developing' },
-];
-
 export const AWARDS = [
   'Organizer at IEEE Victoris 1.0 CTF Competition',
   'Ranked 2nd at CyberTalents July CTF (among 210 players)',

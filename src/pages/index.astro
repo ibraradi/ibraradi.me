@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { SITE, SOCIALS, BLOG_ENABLED, EXPERIENCE, CAPABILITIES, AWARDS, EDUCATION, CERTIFICATES, VOLUNTEERING, TALKS } from '../consts';
+import { SITE, SOCIALS, BLOG_ENABLED, EXPERIENCE, SKILLS, AWARDS, EDUCATION, CERTIFICATES, VOLUNTEERING, TALKS } from '../consts';
 import { getPosts } from '../lib/storyblok';
 
 // Severity ranking for findings (most impactful first).
@@ -125,23 +125,15 @@ const personLd = {
     <section class="dsec" data-reveal>
       <div class="dsec-head">
         <span class="dsec-no">§04</span><span class="dsec-title">Capability Matrix</span>
-        <span class="dsec-meta">{CAPABILITIES.length} domains</span>
+        <span class="dsec-meta">{SKILLS.length} domains</span>
       </div>
-      <div class="capmx">
-        {CAPABILITIES.map((c) => {
-          const lvl = c.tier === 'Core' ? 3 : c.tier === 'Proficient' ? 2 : 1;
-          return (
-            <div class="cap-row">
-              <span class="cap-domain">{c.domain}</span>
-              <span class="cap-meter" role="img" aria-label={c.tier}>
-                <span class={`cap-seg${1 <= lvl ? ' on' : ''}`}></span>
-                <span class={`cap-seg${2 <= lvl ? ' on' : ''}`}></span>
-                <span class={`cap-seg${3 <= lvl ? ' on' : ''}`}></span>
-              </span>
-              <span class={`cap-tier t-${c.tier.toLowerCase()}`}>{c.tier}</span>
-            </div>
-          );
-        })}
+      <div class="matrix">
+        {SKILLS.map((g) => (
+          <div class="mx-cell">
+            <div class="mx-cat">{g.title}</div>
+            <div class="mx-tags">{g.items.map((i) => <span class="mx-tag">{i}</span>)}</div>
+          </div>
+        ))}
       </div>
     </section>
 
