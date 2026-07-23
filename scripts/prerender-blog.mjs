@@ -304,6 +304,24 @@ FIGURES['fig-rasp-pivot'] = `<figure class="diagram">
 <figcaption><b>Fig. 02</b> - the pivot. Every guard hunts for root or Frida, so bringing Frida means fighting each layer; hiding the environment at the OS level (Zygisk DenyList + integrity spoofing, no Frida) clears all four at once.</figcaption>
 </figure>`;
 
+FIGURES['fig-bookmark-xss'] = `<figure class="diagram">
+<svg viewBox="0 0 720 392" role="img" aria-label="Bookmark import: unfiltered title tag becomes a stored XSS">
+<defs><marker id="abx" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="d-arrow"/></marker></defs>
+<rect class="d-box" x="40" y="16" width="640" height="44" rx="8"/><text class="d-t" x="360" y="43" text-anchor="middle">Attacker URL - <tspan font-family="monospace">&lt;img src=x onerror&gt;</tspan> hidden in &lt;title&gt; and &lt;a&gt;</text>
+<line class="d-edge" x1="360" y1="60" x2="360" y2="76" marker-end="url(#abx)"/>
+<rect class="d-box" x="40" y="78" width="640" height="44" rx="8"/><text class="d-t" x="360" y="105" text-anchor="middle">App fetches + previews:  &lt;a&gt; sanitized <tspan class="d-ok">✓</tspan>   ·   &lt;title&gt; passed through <tspan class="d-no">✗</tspan></text>
+<line class="d-edge" x1="360" y1="122" x2="360" y2="138" marker-end="url(#abx)"/>
+<rect x="40" y="140" width="640" height="44" rx="8" fill="rgba(255,107,129,0.08)" stroke="#ff6b81" stroke-width="1.1"/><text class="d-no" x="360" y="167" text-anchor="middle">Self-XSS - the &lt;title&gt; payload executes</text>
+<line class="d-edge" x1="360" y1="184" x2="360" y2="200" marker-end="url(#abx)"/>
+<rect class="d-box" x="40" y="202" width="640" height="44" rx="8"/><text class="d-t" x="360" y="229" text-anchor="middle">"Add" stores the bookmark - but strips <tspan font-family="monospace">on*</tspan> event handlers</text>
+<line class="d-edge" x1="360" y1="246" x2="360" y2="262" marker-end="url(#abx)"/>
+<rect class="d-box" x="40" y="264" width="640" height="44" rx="8"/><text class="d-t" x="360" y="291" text-anchor="middle"><tspan font-family="monospace">&lt;audio src/onerror=alert(document.cookie)&gt;</tspan> survives the filter</text>
+<line class="d-edge" x1="360" y1="308" x2="360" y2="324" marker-end="url(#abx)"/>
+<rect class="d-box-a" x="40" y="326" width="640" height="46" rx="8"/><text class="d-ok" x="360" y="354" text-anchor="middle">Stored XSS - fires for every visitor of the page</text>
+</svg>
+<figcaption><b>Fig. 01</b> - the importer sanitizes &lt;a&gt; but not &lt;title&gt;, giving a self-XSS; the save step strips on* handlers, but <code>&lt;audio src/onerror&gt;</code> slips past into a stored XSS.</figcaption>
+</figure>`;
+
 function injectFigures(html) {
   return html.replace(/<p>\s*\[\[([a-z0-9-]+)\]\]\s*<\/p>/g, (_m, key) => FIGURES[key] || '');
 }
