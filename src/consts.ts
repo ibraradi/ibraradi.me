@@ -111,7 +111,7 @@ export type SkillGroup = { title: string; items: string[] };
 export const SKILLS: SkillGroup[] = [
   {
     title: 'Offensive Security',
-    items: ['Penetration Testing', 'Bug Bounty', 'Web Exploitation', 'OSINT', 'Mobile Hacking'],
+    items: ['Penetration Testing', 'Bug Bounty', 'Web Exploitation', 'Active Directory', 'OSINT', 'Mobile Hacking'],
   },
   {
     title: 'Security Engineering',
