@@ -28,6 +28,11 @@ const usePolling = process.env.DOCKER_DEV === 'true';
 
 export default defineConfig({
   site: 'https://ibraradi.me',
+  // Enforce one canonical URL shape site-wide: every route ends in a trailing
+  // slash, matching the sitemap and post URLs. Keeps Google from seeing
+  // /blog and /blog/ as two pages.
+  trailingSlash: 'always',
+  build: { format: 'directory' },
   integrations: [
     storyblok({
       accessToken: env.STORYBLOK_TOKEN,
