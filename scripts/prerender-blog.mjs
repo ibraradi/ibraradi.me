@@ -322,6 +322,38 @@ FIGURES['fig-bookmark-xss'] = `<figure class="diagram">
 <figcaption><b>Fig. 01</b> - the importer sanitizes &lt;a&gt; but not &lt;title&gt;, giving a self-XSS; the save step strips on* handlers, but <code>&lt;audio src/onerror&gt;</code> slips past into a stored XSS.</figcaption>
 </figure>`;
 
+FIGURES['fig-emailtrust-flow'] = `<figure class="diagram">
+<svg viewBox="0 0 720 322" role="img" aria-label="Email invoice import turned into GitHub account takeover">
+<defs><marker id="aem1" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="d-arrow"/></marker></defs>
+<rect class="d-box" x="40" y="16" width="640" height="44" rx="8"/><text class="d-t" x="360" y="43" text-anchor="middle">Attacker sets the portal source email to <tspan font-family="monospace">noreply@github.com</tspan></text>
+<line class="d-edge" x1="360" y1="60" x2="360" y2="76" marker-end="url(#aem1)"/>
+<rect class="d-box" x="40" y="78" width="640" height="44" rx="8"/><text class="d-t" x="360" y="105" text-anchor="middle">Attacker signs up to GitHub as <tspan font-family="monospace">receipts@redacted.com</tspan></text>
+<line class="d-edge" x1="360" y1="122" x2="360" y2="138" marker-end="url(#aem1)"/>
+<rect class="d-box" x="40" y="140" width="640" height="44" rx="8"/><text class="d-t" x="360" y="167" text-anchor="middle">GitHub sends the verification code from <tspan font-family="monospace">noreply@github.com</tspan></text>
+<line class="d-edge" x1="360" y1="184" x2="360" y2="200" marker-end="url(#aem1)"/>
+<rect x="40" y="202" width="640" height="44" rx="8" fill="rgba(255,107,129,0.08)" stroke="#ff6b81" stroke-width="1.1"/><text class="d-no" x="360" y="229" text-anchor="middle">Sender matches the attacker's source - code is routed to the attacker</text>
+<line class="d-edge" x1="360" y1="246" x2="360" y2="262" marker-end="url(#aem1)"/>
+<rect class="d-box-a" x="40" y="264" width="640" height="46" rx="8"/><text class="d-ok" x="360" y="291" text-anchor="middle">Attacker confirms GitHub - owns the company workspace</text>
+</svg>
+<figcaption><b>Fig. 01</b> - the importer files an incoming email under whichever user set its sender as their source address; choosing <code>noreply@github.com</code> delivers GitHub's verification code straight to the attacker.</figcaption>
+</figure>`;
+
+FIGURES['fig-emailtrust-oauth'] = `<figure class="diagram">
+<svg viewBox="0 0 720 322" role="img" aria-label="Bridging Slack's random sender through an Apple OAuth account">
+<defs><marker id="aem2" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" class="d-arrow"/></marker></defs>
+<rect x="40" y="16" width="640" height="44" rx="8" fill="rgba(255,107,129,0.08)" stroke="#ff6b81" stroke-width="1.1"/><text class="d-no" x="360" y="43" text-anchor="middle">Slack sends from <tspan font-family="monospace">no-reply-{random}@slack.com</tspan> - cannot preset</text>
+<line class="d-edge" x1="360" y1="60" x2="360" y2="76" marker-end="url(#aem2)"/>
+<rect class="d-box" x="40" y="78" width="640" height="44" rx="8"/><text class="d-t" x="360" y="105" text-anchor="middle">Set the portal source email to <tspan font-family="monospace">appleid@id.apple.com</tspan></text>
+<line class="d-edge" x1="360" y1="122" x2="360" y2="138" marker-end="url(#aem2)"/>
+<rect class="d-box" x="40" y="140" width="640" height="44" rx="8"/><text class="d-t" x="360" y="167" text-anchor="middle">Create an Apple ID as <tspan font-family="monospace">receipts@redacted.com</tspan>, capture the code</text>
+<line class="d-edge" x1="360" y1="184" x2="360" y2="200" marker-end="url(#aem2)"/>
+<rect class="d-box" x="40" y="202" width="640" height="44" rx="8"/><text class="d-t" x="360" y="229" text-anchor="middle">Sign in to Slack with Apple (OAuth) - no email step</text>
+<line class="d-edge" x1="360" y1="246" x2="360" y2="262" marker-end="url(#aem2)"/>
+<rect class="d-box-a" x="40" y="264" width="640" height="46" rx="8"/><text class="d-ok" x="360" y="291" text-anchor="middle">Slack trusts Apple - company workspace access</text>
+</svg>
+<figcaption><b>Fig. 02</b> - Slack's random per-signup sender blocks presetting, so Apple is used as a bridge: verify an Apple ID through the same interception, then Sign in with Apple makes Slack trust the address with no email check.</figcaption>
+</figure>`;
+
 function injectFigures(html) {
   return html.replace(/<p>\s*\[\[([a-z0-9-]+)\]\]\s*<\/p>/g, (_m, key) => FIGURES[key] || '');
 }
