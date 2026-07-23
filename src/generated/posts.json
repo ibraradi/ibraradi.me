@@ -253,7 +253,7 @@
     "slug": "manipulating-email-trust",
     "fullSlug": "blog/manipulating-email-trust",
     "title": "Manipulating Email Trust: Invoice Import to GitHub and Slack Takeover",
-    "date": "2023-08-18 00:00",
+    "date": "2024-03-03 00:00",
     "excerpt": "Accounting tools that import receipts by email decide who owns an incoming message by its sender. Set that source to noreply@github.com and GitHub's verification code lands in your portal; bridge Slack through an Apple OAuth account, and one invoice feature becomes account takeover of a company's GitHub and Slack.",
     "tags": [
       "account-takeover",
