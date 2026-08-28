@@ -70,6 +70,21 @@ export const EXPERIENCE: Experience[] = [
     tags: ['ASM', 'Threat Intel', 'AI / RAG', 'DevSecOps', 'Distributed Systems', 'GCP'],
   },
   {
+    role: 'Founder',
+    company: 'Fraudox',
+    url: 'https://fraudox.com',
+    location: 'Kuala Lumpur, MY',
+    period: 'May 2026 - Present',
+    summary:
+      'Founded Fraudox, a takedown service that removes phishing sites, impersonation accounts, and other fraudulent content across 50+ platforms, with a typical turnaround of under 48 hours.',
+    points: [
+      'Takedowns: run rapid content takedown operations with a typical turnaround of under 48 hours.',
+      'Billing: implemented a 100% success-based model, so clients only pay when content is successfully removed.',
+      'Intake: manage a 24/7 request intake system handling phishing sites and impersonation accounts across 50+ platforms.',
+    ],
+    tags: ['Takedowns', 'Brand Protection', 'Anti-Phishing', 'Impersonation', 'Operations'],
+  },
+  {
     role: 'Security Engineer',
     company: 'DeepStrike',
     url: 'https://deepstrike.io',
