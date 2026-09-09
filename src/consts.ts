@@ -163,6 +163,12 @@ export const CERTIFICATES = [
 
 export const TALKS = [
   {
+    title: 'Offensive Security Mindset: Research Beyond Assumptions',
+    event: 'YouTube',
+    youtube: 'nNZbTL25MNI',
+    url: 'https://www.youtube.com/watch?v=nNZbTL25MNI',
+  },
+  {
     title: 'Cybersecurity',
     event: 'CAT Reloaded',
     youtube: '9P4AMq9aO3Y',
