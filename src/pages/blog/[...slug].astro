@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { BLOG_ENABLED, SITE } from '../../consts';
+import { BLOG_ENABLED, SITE, SOCIALS } from '../../consts';
+import { formatPostDate, parsePostDate, postDateToISOString } from '../../lib/dates';
 import { getPosts, getPost } from '../../lib/storyblok';
 
 export async function getStaticPaths() {
@@ -14,11 +15,21 @@ const { post } = Astro.props;
 const data = post ?? (await getPost(Astro.params.slug as string));
 const html = data?.html ?? '';
 
-const dateFmt = (d: string) =>
-  d ? new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
-const dateShort = (d: string) =>
-  d ? new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
-const isoDate = data?.date ? new Date(data.date).toISOString() : undefined;
+const dateFmt = (d: string) => formatPostDate(d, { year: 'numeric', month: 'long', day: 'numeric' });
+const dateShort = (d: string) => formatPostDate(d);
+const isoDate = postDateToISOString(data?.date);
+const postUrl = data ? `${SITE.url}/blog/${data.slug}/` : new URL(Astro.url.pathname, SITE.url).toString();
+const blogUrl = `${SITE.url}/blog/`;
+const personId = `${SITE.url}/#person`;
+const websiteId = `${SITE.url}/#website`;
+const wordCount = html
+  ? html
+      .replace(/<[^>]*>/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .split(' ')
+      .filter(Boolean).length
+  : undefined;
 
 // Recommended reading: rank other posts by shared tags, then recency.
 const all = await getPosts();
@@ -26,7 +37,7 @@ const related = data
   ? all
       .filter((p) => p.slug !== data.slug)
       .map((p) => ({ p, score: p.tags.filter((t) => data.tags.includes(t)).length }))
-      .sort((a, b) => b.score - a.score || +new Date(b.p.date) - +new Date(a.p.date))
+      .sort((a, b) => b.score - a.score || parsePostDate(b.p.date).getTime() - parsePostDate(a.p.date).getTime())
       .slice(0, 3)
       .map((x) => x.p)
   : [];
@@ -36,15 +47,35 @@ const ogImage = data ? `${SITE.url}/og/${data.slug}.png` : `${SITE.url}/og.png`;
 const articleLd = data && {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
+  '@id': `${postUrl}#article`,
+  url: postUrl,
   headline: data.title,
   description: data.excerpt,
   datePublished: isoDate,
   dateModified: isoDate,
+  inLanguage: 'en-US',
   image: ogImage,
+  thumbnailUrl: ogImage,
   keywords: data.tags.join(', '),
-  author: { '@type': 'Person', name: SITE.name, url: SITE.url },
-  publisher: { '@type': 'Person', name: SITE.name, url: SITE.url },
-  mainEntityOfPage: `${SITE.url}/blog/${data.slug}/`,
+  articleSection: data.tags[0] ?? 'Offensive Security',
+  wordCount,
+  about: data.tags.map((tag) => ({ '@type': 'Thing', name: tag })),
+  author: {
+    '@type': 'Person',
+    '@id': personId,
+    name: SITE.name,
+    url: SITE.url,
+    sameAs: [SOCIALS.github, SOCIALS.linkedin, SOCIALS.x],
+  },
+  publisher: { '@id': personId },
+  isPartOf: [
+    { '@type': 'Blog', '@id': `${blogUrl}#blog`, name: 'Field Notes', url: blogUrl },
+    { '@type': 'WebSite', '@id': websiteId, name: SITE.name, url: `${SITE.url}/` },
+  ],
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': postUrl,
+  },
 };
 
 const breadcrumbLd = data && {
@@ -52,8 +83,8 @@ const breadcrumbLd = data && {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE.url}/` },
-    { '@type': 'ListItem', position: 2, name: 'Field Notes', item: `${SITE.url}/blog/` },
-    { '@type': 'ListItem', position: 3, name: data.title, item: `${SITE.url}/blog/${data.slug}/` },
+    { '@type': 'ListItem', position: 2, name: 'Field Notes', item: blogUrl },
+    { '@type': 'ListItem', position: 3, name: data.title, item: postUrl },
   ],
 };
 
@@ -66,6 +97,7 @@ const ld = [articleLd, breadcrumbLd].filter(Boolean) as Record<string, unknown>[
   path={`/blog/${data?.slug}/`}
   ogType="article"
   image={data ? `/og/${data.slug}.png` : undefined}
+  imageAlt={data ? `${data.title} social preview` : undefined}
   publishedTime={isoDate}
   jsonLd={ld.length ? ld : undefined}
 >

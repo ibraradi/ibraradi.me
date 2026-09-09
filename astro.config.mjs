@@ -5,18 +5,23 @@ import sitemap from '@astrojs/sitemap';
 import { storyblok } from '@storyblok/astro';
 import { loadEnv } from 'vite';
 import { BLOG_ENABLED } from './src/consts.ts';
+import { postDateToISOString } from './src/lib/dates.ts';
 
 const env = loadEnv(process.env.NODE_ENV || 'development', process.cwd(), '');
 
 // Map blog-post URLs -> ISO date so the sitemap can advertise <lastmod>,
 // which helps search engines recrawl updated posts. The file is produced by
 // scripts/prerender-blog.mjs before `astro build` runs.
+/** @type {Record<string, string>} */
 const postLastmod = {};
+let latestPostLastmod;
 try {
   const posts = JSON.parse(readFileSync(new URL('./src/generated/posts.json', import.meta.url), 'utf-8'));
   for (const p of posts) {
-    if (p?.slug && p?.date) postLastmod[`https://ibraradi.me/blog/${p.slug}/`] = new Date(p.date).toISOString();
+    const lastmod = postDateToISOString(p?.date);
+    if (p?.slug && lastmod) postLastmod[`https://ibraradi.me/blog/${p.slug}/`] = lastmod;
   }
+  latestPostLastmod = postDateToISOString(posts[0]?.date);
 } catch {
   /* posts.json not generated yet - sitemap simply omits lastmod */
 }
@@ -48,6 +53,19 @@ export default defineConfig({
       serialize(item) {
         const lastmod = postLastmod[item.url];
         if (lastmod) item.lastmod = lastmod;
+        if (!lastmod && latestPostLastmod && (item.url === 'https://ibraradi.me/' || item.url === 'https://ibraradi.me/blog/')) {
+          item.lastmod = latestPostLastmod;
+        }
+        if (item.url === 'https://ibraradi.me/') {
+          item.changefreq = 'weekly';
+          item.priority = 1;
+        } else if (item.url === 'https://ibraradi.me/blog/') {
+          item.changefreq = 'weekly';
+          item.priority = 0.9;
+        } else if (item.url.includes('/blog/')) {
+          item.changefreq = 'monthly';
+          item.priority = 0.8;
+        }
         return item;
       },
     }),

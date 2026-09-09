@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE, SOCIALS, BLOG_ENABLED, EXPERIENCE, SKILLS, AWARDS, EDUCATION, CERTIFICATES, VOLUNTEERING, TALKS } from '../consts';
+import { postDateToISOString } from '../lib/dates';
 import { getPosts } from '../lib/storyblok';
 
 // Severity ranking for findings (most impactful first).
@@ -14,10 +15,14 @@ const noteDate = (d: string) =>
 
 const ghShort = SOCIALS.github.replace('https://', '');
 const liShort = SOCIALS.linkedin.replace('https://www.', '').replace(/\/$/, '');
+const personId = `${SITE.url}/#person`;
+const websiteId = `${SITE.url}/#website`;
+const latestPostIso = postDateToISOString(recentPosts[0]?.date);
 
 const personLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
+  '@id': personId,
   name: SITE.name,
   url: SITE.url,
   image: `${SITE.url}/og.png`,
@@ -39,9 +44,50 @@ const personLd = {
   ],
   sameAs: [SOCIALS.github, SOCIALS.linkedin, SOCIALS.x],
 };
+
+const websiteLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': websiteId,
+  name: SITE.name,
+  url: `${SITE.url}/`,
+  inLanguage: 'en-US',
+  publisher: { '@id': personId },
+};
+
+const profilePageLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  '@id': `${SITE.url}/#profile`,
+  url: `${SITE.url}/`,
+  name: SITE.title,
+  description: SITE.description,
+  inLanguage: 'en-US',
+  isPartOf: { '@id': websiteId },
+  about: { '@id': personId },
+  mainEntity: { '@id': personId },
+  ...(latestPostIso ? { dateModified: latestPostIso } : {}),
+};
+
+const recentPostsLd = recentPosts.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      '@id': `${SITE.url}/#recent-field-notes`,
+      name: 'Recent offensive security write-ups',
+      itemListElement: recentPosts.map((post, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        url: `${SITE.url}/blog/${post.slug}/`,
+        name: post.title,
+      })),
+    }
+  : null;
+
+const ld = [websiteLd, profilePageLd, personLd, recentPostsLd].filter(Boolean) as Record<string, unknown>[];
 ---
 
-<BaseLayout jsonLd={personLd}>
+<BaseLayout jsonLd={ld}>
   <div class="doc">
     <!-- TITLE BLOCK -->
     <section class="doc-hero">

@@ -1,5 +1,6 @@
 import rss from '@astrojs/rss';
 import { SITE, BLOG_ENABLED } from '../consts';
+import { parsePostDate } from '../lib/dates';
 import { getPosts } from '../lib/storyblok';
 
 export async function GET(context) {
@@ -16,7 +17,7 @@ export async function GET(context) {
     items: posts.map((post) => ({
       title: post.title,
       description: post.excerpt,
-      pubDate: post.date ? new Date(post.date) : new Date(),
+      pubDate: post.date ? parsePostDate(post.date) : new Date(),
       link: `/blog/${post.slug}/`,
     })),
   });

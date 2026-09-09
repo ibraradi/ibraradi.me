@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { BLOG_ENABLED } from '../../consts';
+import { BLOG_ENABLED, SITE, SOCIALS } from '../../consts';
+import { formatPostDate, postDateToISOString } from '../../lib/dates';
 import { getPosts } from '../../lib/storyblok';
 
 if (!BLOG_ENABLED) {
@@ -8,14 +9,77 @@ if (!BLOG_ENABLED) {
 }
 
 const posts = await getPosts();
-const dateFmt = (d: string) =>
-  d ? new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+const dateFmt = (d: string) => formatPostDate(d);
+const description =
+  'Offensive security write-ups, bug bounty case studies, mobile research, web exploitation, and security engineering notes by Ibrahim Radi.';
+const personId = `${SITE.url}/#person`;
+const websiteId = `${SITE.url}/#website`;
+const blogUrl = `${SITE.url}/blog/`;
+
+const blogLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  '@id': `${blogUrl}#blog`,
+  name: 'Field Notes',
+  description,
+  url: blogUrl,
+  inLanguage: 'en-US',
+  author: {
+    '@type': 'Person',
+    '@id': personId,
+    name: SITE.name,
+    url: SITE.url,
+    sameAs: [SOCIALS.github, SOCIALS.linkedin, SOCIALS.x],
+  },
+  publisher: { '@id': personId },
+  blogPost: posts.map((post) => ({
+    '@type': 'BlogPosting',
+    headline: post.title,
+    url: `${SITE.url}/blog/${post.slug}/`,
+    datePublished: postDateToISOString(post.date),
+  })),
+};
+
+const collectionPageLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': `${blogUrl}#page`,
+  url: blogUrl,
+  name: 'Field Notes',
+  description,
+  inLanguage: 'en-US',
+  isPartOf: { '@id': websiteId },
+  mainEntity: { '@id': `${blogUrl}#posts` },
+};
+
+const itemListLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  '@id': `${blogUrl}#posts`,
+  name: 'Offensive security articles',
+  itemListElement: posts.map((post, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    url: `${SITE.url}/blog/${post.slug}/`,
+    name: post.title,
+  })),
+};
+
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE.url}/` },
+    { '@type': 'ListItem', position: 2, name: 'Field Notes', item: blogUrl },
+  ],
+};
 ---
 
 <BaseLayout
-  title="Field Notes"
-  description="Field write-ups on offensive security, tooling, and research by Ibrahim Radi."
+  title="Offensive Security Field Notes"
+  description={description}
   path="/blog/"
+  jsonLd={[blogLd, collectionPageLd, itemListLd, breadcrumbLd]}
 >
   <div class="doc">
     <section class="doc-hero" data-reveal>
