@@ -1689,9 +1689,6 @@ a.co:hover { text-decoration: underline; }
 
 /* link-in-bio page (/links/) */
 .lnk { max-width: 560px; }
-.lnk-hero { padding-top: 40px; display: flex; flex-direction: column; align-items: center; text-align: center; }
-.lnk-hero .photo { width: 112px; font-size: 2.2rem; margin-bottom: 22px; }
-.lnk-hero .dh-name { font-size: clamp(2.1rem, 9vw, 3rem); }
 .lnk-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
 .lnk-item {
   display: grid; grid-template-columns: 42px 1fr auto; align-items: center; gap: 14px;
