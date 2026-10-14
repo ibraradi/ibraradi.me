@@ -21,7 +21,20 @@ export const SOCIALS = {
   linkedin: 'https://www.linkedin.com/in/ibraradi/',
   x: 'https://x.com/ibraradi9',
   xHandle: '@ibraradi9',
+  youtube: 'https://www.youtube.com/@ibraradi9',
+  facebook: 'https://www.facebook.com/ibraradi9',
 } as const;
+
+// Link-in-bio list rendered on /links/, in display order. `icon` picks the
+// inline SVG in src/pages/links.astro.
+export const LINKS = [
+  { label: 'LinkedIn', handle: 'in/ibraradi', href: SOCIALS.linkedin, icon: 'linkedin' },
+  { label: 'X', handle: SOCIALS.xHandle, href: SOCIALS.x, icon: 'x' },
+  { label: 'YouTube', handle: '@ibraradi9', href: SOCIALS.youtube, icon: 'youtube' },
+  { label: 'GitHub', handle: 'ibraradi', href: SOCIALS.github, icon: 'github' },
+  { label: 'Facebook', handle: 'ibraradi9', href: SOCIALS.facebook, icon: 'facebook' },
+  { label: 'Email', handle: SOCIALS.email, href: `mailto:${SOCIALS.email}`, icon: 'email' },
+] as const;
 
 export const NAV = [
   { label: 'About', href: '/#about' },
