@@ -84,12 +84,12 @@
     );
   };
 
-  // 6) Live clock - Kuala Lumpur time (runs regardless of motion prefs)
+  // 6) Live clock - Cairo time (runs regardless of motion prefs)
   const clock = () => {
     const els = document.querySelectorAll<HTMLElement>('[data-clock]');
     if (!els.length) return;
     const fmt = new Intl.DateTimeFormat('en-GB', {
-      timeZone: 'Asia/Kuala_Lumpur',
+      timeZone: 'Africa/Cairo',
       hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
     });
     const tick = () => {

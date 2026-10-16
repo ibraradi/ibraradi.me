@@ -12,7 +12,7 @@ export const SITE = {
     'Ibrahim Radi, Security Engineer and technical co-founder of Flawtrack. ' +
     'Attack Surface Management, threat intelligence, DevSecOps, penetration testing, and CTF.',
   url: 'https://ibraradi.me',
-  location: 'Kuala Lumpur, Malaysia',
+  location: 'Egypt',
 } as const;
 
 export const SOCIALS = {
